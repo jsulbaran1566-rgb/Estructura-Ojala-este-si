@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <title>Panel Productor - AgroDirecto</title>
+</head>
+<body class="pagina-productor">
+
+    <nav id="nav-principal">
+        <a href="index.html"><strong>AGRODIRECTO</strong></a>
+        <div class="links-nav">
+            <span class="texto-rol-nav">Panel Productor</span>
+            <div class="icono-campana tiene-tooltip">
+                <span>🔔</span>
+                <span class="badge-campana" id="badge-notif">3</span>
+                <span class="texto-tooltip">3 notificaciones nuevas</span>
+            </div>
+            <a href="index.html" id="btn-logout" class="btn-verde btn-salir">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="layout-panel">
+
+        <!-- SIDEBAR: position sticky, verde bosque (pagina-productor) -->
+        <aside class="sidebar">
+            <div class="perfil-sidebar">
+                <div class="avatar-usuario">🌿</div>
+                <h4 id="nombre-productor">Productor</h4>
+                <span><span class="badge-rol badge-productor">Productor</span></span>
+            </div>
+            <nav class="nav-sidebar">
+                <a href="panel_productor.html" class="activo">📊 Resumen</a>
+                <a href="mis_cultivos.html">🌱 Mis Cultivos</a>
+                <a href="trazabilidad.html">📍 Trazabilidad</a>
+                <a href="ventas_pagos.html">💰 Ventas y Pagos</a>
+                <a href="reportes.html">📈 Reportes</a>
+                <a href="perfil.html">⚙️ Mi Perfil</a>
+                <a href="#" id="btn-soporte">💬 Soporte</a>
+            </nav>
+        </aside>
+
+        <div class="zona-contenido">
+
+            <div class="cabecera-panel">
+                <div>
+                    <h2 id="titulo-bienvenida">Bienvenido <span class="badge-rol badge-productor">PRODUCTOR</span></h2>
+                    <p>Resumen de su operacion agricola</p>
+                </div>
+                <a href="mis_cultivos.html" class="btn-verde" id="btn-nuevo-lote">+ Nuevo Lote</a>
+            </div>
+
+            <!-- ESTADISTICAS -->
+            <div class="fila-stats">
+                <div class="stat-tarjeta" data-icono="🌱">
+                    <div class="stat-numero" id="stat-cultivos">—</div>
+                    <div class="stat-etiqueta">Cultivos Activos</div>
+                </div>
+                <div class="stat-tarjeta stat-marron" data-icono="⚖️">
+                    <div class="stat-numero" id="stat-kg-reservados">—</div>
+                    <div class="stat-etiqueta">Kg Reservados</div>
+                </div>
+                <div class="stat-tarjeta stat-naranja" data-icono="💰">
+                    <div class="stat-numero" id="stat-ingresos">—</div>
+                    <div class="stat-etiqueta">Ingresos Proyectados</div>
+                </div>
+                <div class="stat-tarjeta stat-azul" data-icono="🏪">
+                    <div class="stat-numero" id="stat-compradores">—</div>
+                    <div class="stat-etiqueta">Compradores Activos</div>
+                </div>
+            </div>
+
+            <div class="grid-tarjetas">
+                <div class="tarjeta">
+                    <h3>🌱 Mis Cultivos</h3>
+                    <p>Registre nuevos lotes indicando cantidad (kg), variedad y fecha de siembra.</p>
+                    <div class="margen-top-16"><a href="mis_cultivos.html" class="btn-verde btn-borde">Ver / Agregar cultivos</a></div>
+                </div>
+                <div class="tarjeta">
+                    <h3>📍 Trazabilidad</h3>
+                    <p>Actualice el estado de su cosecha para notificar automaticamente al comprador.</p>
+                    <div class="margen-top-16"><a href="trazabilidad.html" class="btn-verde btn-borde">Actualizar estados</a></div>
+                </div>
+                <div class="tarjeta">
+                    <h3>📈 Reportes</h3>
+                    <p>Visualice ingresos proyectados y total de kilogramos reservados por periodo.</p>
+                    <div class="margen-top-16"><a href="reportes.html" class="btn-verde btn-borde">Ver reportes</a></div>
+                </div>
+                <div class="tarjeta">
+                    <h3>💳 Pagos</h3>
+                    <p>Consulte pagos pendientes e historial de transferencias por cosecha entregada.</p>
+                    <div class="margen-top-16"><a href="ventas_pagos.html" class="btn-verde btn-borde">Ver pagos</a></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <a href="#" id="btn-volver-arriba" title="Volver arriba">▲</a>
+
+    <div id="modal-soporte" class="modal-soporte">
+    <div class="contenido-modal">
+        <span id="cerrar-soporte">&times;</span>
+        <h2>Centro de Soporte</h2>
+        <p>¿En qué podemos ayudarte?</p>
+
+        <form>
+            <input type="text" placeholder="Tu nombre" required>
+            <input type="email" placeholder="Tu correo" required>
+            <textarea placeholder="Describe tu problema..." rows="5"></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+    </div>
+
+    <footer id="pie-pagina">
+        <p><strong>AgroDirecto</strong> — Del campo a su negocio, sin rodeos. 2026</p>
+    </footer>
+
+    <script src="api.js"></script>
+
+<script>
+    const btnSoporte = document.getElementById("btn-soporte");
+    const modalSoporte = document.getElementById("modal-soporte");
+    const cerrarSoporte = document.getElementById("cerrar-soporte");
+
+    btnSoporte.addEventListener("click", function(e) {
+    e.preventDefault();
+    modalSoporte.style.display = "flex";
+    });
+
+    cerrarSoporte.addEventListener("click", function() {
+    modalSoporte.style.display = "none";
+    });
+
+    window.addEventListener("click", function(e) {
+    if (e.target === modalSoporte) {
+        modalSoporte.style.display = "none";
+    }
+    });
+
+    const idProductor = parseInt(sessionStorage.getItem('usuario_id')) || 2;
+
+    document.getElementById('nombre-productor').textContent =
+        sessionStorage.getItem('usuario_nombre') || 'Productor';
+    document.getElementById('titulo-bienvenida').innerHTML =
+        `Bienvenido, ${sessionStorage.getItem('usuario_nombre') || 'Productor'} <span class="badge-rol badge-productor">PRODUCTOR</span>`;
+
+    window.addEventListener('scroll', () => {
+        document.getElementById('btn-volver-arriba')
+            .classList.toggle('visible', window.scrollY > 200);
+    });
+
+    async function cargarPanel() {
+        const [lotes, reservas] = await Promise.all([
+            obtenerLotes({}),
+            obtenerReservas({})
+        ]);
+
+        const misLotes = lotes.filter(l => l.productor_id === idProductor);
+        const kgReservados = misLotes.reduce((s, l) => s + (l.kg_reservados || 0), 0);
+        const compradores  = new Set(
+            reservas.filter(r => misLotes.find(l => l.id === r.lote_id))
+                       .map(r => r.comprador_id)
+        ).size;
+
+        document.getElementById('stat-cultivos').textContent      = misLotes.filter(l => l.estado === 'Activo').length;
+        document.getElementById('stat-kg-reservados').textContent = kgReservados + ' kg';
+        document.getElementById('stat-ingresos').textContent      = '$' + (kgReservados * 2800).toLocaleString('es-CO');
+        document.getElementById('stat-compradores').textContent   = compradores;
+        document.getElementById('badge-notif').textContent        = reservas.filter(r =>
+            misLotes.find(l => l.id === r.lote_id)).length;
+    }
+
+    (async () => { await cargarPanel(); })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="imagenes.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <title>Panel Administrador - AgroDirecto</title>
+</head>
+<body class="pagina-admin">
+
+    <!-- NAV: position sticky -->
+    <nav id="nav-principal">
+        <a href="index.html"><strong>AGRODIRECTO</strong></a>
+        <div class="links-nav">
+
+            <a href="index.html" id="btn-logout" class="btn-verde btn-salir">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="layout-panel">
+
+        <!-- SIDEBAR: position sticky, fondo azul oscuro (pagina-admin) -->
+        <aside class="sidebar">
+            <div class="perfil-sidebar">
+                <!-- Avatar: position relative + ::after absolute (punto online) -->
+                <div class="avatar-usuario">🛡️</div>
+                <h4 id="nombre-admin"></h4>
+                <span><span class="badge-rol badge-admin">Admin</span></span>
+            </div>
+            <nav class="nav-sidebar">
+                <a href="panel_admin.html" class="activo">📊 Resumen General</a>
+                <a href="usuarios.html">👥 Usuarios</a>
+                <a href="roles.html">🔐 Roles</a>
+                <a href="proveedores.html">🚚 Proveedores</a>
+                <a href="lotes.html">🌱 Todos los Lotes</a>
+                <a href="historial.html">📋 Historial</a>
+                <a href="#" id="btn-soporte">💬 Soporte</a>
+            </nav>
+        </aside>
+
+        <div class="zona-contenido">
+
+            <div class="banner-panel banner-admin">
+                <span>🌱 AgroDirecto — Plataforma de comercio agricola directo</span>
+            </div>
+
+            <div class="cabecera-panel">
+                <div>
+                    <h2>Panel de Administracion <span class="badge-rol badge-admin">ADMIN</span></h2>
+                    <p id="fecha-admin">Resumen del sistema</p>
+                </div>
+            </div>
+
+            <!-- ESTADISTICAS: position relative con ::before decorativo absolute -->
+            <div class="fila-stats">
+                <div class="stat-tarjeta" data-icono="👥">
+                    <div class="stat-numero" id="stat-usuarios">—</div>
+                    <div class="stat-etiqueta">Usuarios Totales</div>
+                </div>
+                <div class="stat-tarjeta stat-marron" data-icono="🔐">
+                    <div class="stat-numero" id="stat-roles">—</div>
+                    <div class="stat-etiqueta">Roles Definidos</div>
+                </div>
+                <div class="stat-tarjeta stat-naranja" data-icono="🚚">
+                    <div class="stat-numero" id="stat-proveedores">—</div>
+                    <div class="stat-etiqueta">Proveedores</div>
+                </div>
+                <div class="stat-tarjeta stat-azul" data-icono="🌱">
+                    <div class="stat-numero" id="stat-lotes">—</div>
+                    <div class="stat-etiqueta">Lotes Activos</div>
+                </div>
+            </div>
+
+            <!-- ACCESOS RAPIDOS -->
+            <div class="grid-tarjetas">
+                <div class="tarjeta tarjeta-azul">
+                    <h3>👥 Gestion de Usuarios</h3>
+                    <p>Cree, modifique y elimine cuentas de productores, compradores y administradores del sistema.</p>
+                    <div class="margen-top-16">
+                        <a href="usuarios.html" class="btn-verde">Ir a Usuarios</a>
+                    </div>
+                </div>
+                <div class="tarjeta tarjeta-marron">
+                    <h3>🔐 Gestion de Roles</h3>
+                    <p>Administre los roles del sistema y los permisos asociados a cada perfil de usuario.</p>
+                    <div class="margen-top-16">
+                        <a href="roles.html" class="btn-verde btn-borde">Ir a Roles</a>
+                    </div>
+                </div>
+                <div class="tarjeta tarjeta-naranja">
+                    <h3>🚚 Gestion de Proveedores</h3>
+                    <p>Registre y administre proveedores logisticos y de insumos vinculados a la plataforma.</p>
+                    <div class="margen-top-16">
+                        <a href="proveedores.html" class="btn-verde btn-borde">Ir a Proveedores</a>
+                    </div>
+                </div>
+                <div class="tarjeta">
+                    <h3>📋 Historial de Actividad</h3>
+                    <p>Consulte el historial de seguimiento y estados de reservas registradas en el sistema.</p>
+                    <div class="margen-top-16">
+                        <a href="historial.html" class="btn-verde btn-borde">Ver Historial</a>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <!-- TABLA RESUMEN USUARIOS RECIENTES -->
+            <div class="margen-top-32">
+                <div class="fila-titulo-panel">
+                    <h3 class="titulo-panel">Usuarios Recientes</h3>
+                    <a href="usuarios.html" class="btn-verde btn-borde">Ver todos →</a>
+                </div>
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-usuarios-admin">
+                        <tr><td colspan="5">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <br>
+
+            <!-- TABLA RESUMEN PROVEEDORES -->
+            <div class="margen-top-32">
+                <div class="fila-titulo-panel">
+                    <h3 class="titulo-panel">Proveedores Registrados</h3>
+                    <a href="proveedores.html" class="btn-verde btn-borde">Ver todos →</a>
+                </div>
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-proveedores-admin">
+                        <tr><td colspan="4">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="modal-soporte" class="modal-soporte">
+    <div class="contenido-modal">
+        <span id="cerrar-soporte">&times;</span>
+        <h2>Centro de Soporte</h2>
+        <p>¿En qué podemos ayudarte?</p>
+
+        <form>
+            <input type="text" placeholder="Tu nombre" required>
+            <input type="email" placeholder="Tu correo" required>
+            <textarea placeholder="Describe tu problema..." rows="5"></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+</div>
+
+    <a href="#" id="btn-volver-arriba" title="Volver arriba">▲</a>
+
+        <footer id="pie-pagina">
+        <p><strong>AgroDirecto</strong> — Del campo a su negocio, sin rodeos. 2026</p>
+    </footer>
+
+    <script src="api.js"></script>
+
+ <script>
+    const btnSoporte = document.getElementById("btn-soporte");
+    const modal = document.getElementById("modal-soporte");
+    const cerrar = document.getElementById("cerrar-soporte");
+
+    btnSoporte.addEventListener("click", function(e) {
+    e.preventDefault();
+    modal.style.display = "flex";
+    });
+
+    cerrar.addEventListener("click", function() {
+    modal.style.display = "none";
+        });
+
+    window.addEventListener("click", function(e) {
+    if (e.target === modal) {
+        modal.style.display = "none";
+    }
+    });
+
+    document.getElementById('nombre-admin').textContent =
+        sessionStorage.getItem('usuario_nombre') || 'Administrador';
+    document.getElementById('fecha-admin').textContent =
+        new Date().toLocaleDateString('es-CO', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+    window.addEventListener('scroll', () => {
+        document.getElementById('btn-volver-arriba')
+            .classList.toggle('visible', window.scrollY > 200);
+    });
+
+    async function cargarPanel() {
+        const [usuarios, roles, proveedores, lotes] = await Promise.all([
+            obtenerUsuarios(),
+            obtenerRoles(),
+            obtenerProveedores(),
+            obtenerLotes()
+        ]);
+
+        document.getElementById('stat-usuarios').textContent   = usuarios.length;
+        document.getElementById('stat-roles').textContent      = roles.length;
+        document.getElementById('stat-proveedores').textContent= proveedores.length;
+        document.getElementById('stat-lotes').textContent      = lotes.filter(l => l.estado === 'Activo').length;
+
+        // Tabla usuarios (primeros 5)
+        document.getElementById('tabla-usuarios-admin').innerHTML =
+            usuarios.slice(0, 5).map(u => `
+                <tr>
+                    <td>${u.id}</td>
+                    <td>${u.nombre}</td>
+                    <td><span class="chip-rol chip-${u.rol.toLowerCase()}">${u.rol}</span></td>
+                    <td><span class="etiqueta ${u.estado === 'Activo' ? 'etiqueta-verde' : 'etiqueta-gris'}">${u.estado}</span></td>
+                    <td><div class="acciones-tabla">
+                        <a href="usuarios.html" class="btn-tabla btn-editar">Ver todos</a>
+                    </div></td>
+                </tr>`).join('');
+
+        // Tabla proveedores (primeros 5)
+        document.getElementById('tabla-proveedores-admin').innerHTML =
+            proveedores.slice(0, 5).map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.nombre}</td>
+                    <td>${p.tipo}</td>
+                    <td><span class="etiqueta ${p.estado === 'Activo' ? 'etiqueta-verde' : 'etiqueta-gris'}">${p.estado}</span></td>
+                </tr>`).join('');
+    }
+    (async () => { await cargarPanel(); })();
+</script>
+
+</body>
+</html>
