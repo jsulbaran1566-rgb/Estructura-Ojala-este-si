@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <title>Explorar Lotes - AgroDirecto</title>
+</head>
+<body class="pagina-comprador">
+
+    <nav id="nav-principal">
+        <a href="index.html"><strong>AGRODIRECTO</strong></a>
+        <div class="links-nav">
+            <span class="texto-rol-nav">Panel Comprador</span>
+            <div class="icono-campana tiene-tooltip">
+                <span>🔔</span>
+                <span class="badge-campana" id="badge-notif">2</span>
+                <span class="texto-tooltip">2 notificaciones nuevas</span>
+            </div>
+            <a href="index.html" id="btn-logout" class="btn-verde btn-salir">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="layout-panel">
+
+        <!-- SIDEBAR: azul marino (pagina-comprador) -->
+        <aside class="sidebar">
+            <div class="perfil-sidebar">
+                <div class="avatar-usuario">🏪</div>
+                <h4 id="nombre-comprador">Comprador</h4>
+                <span><span class="badge-rol badge-comprador">Comprador</span></span>
+            </div>
+            <nav class="nav-sidebar">
+                <a href="panel_comprador.html">📊 Resumen</a>
+                <a href="explorar_lotes.html" class="activo">🔍 Explorar Lotes</a>
+                <a href="mis_reservas.html">📋 Mis Reservas</a>
+                <a href="entregas.html">🚚 Proximas Entregas</a>
+                <a href="pagos.html">💳 Pagos y Facturas</a>
+                <a href="productores_favoritos.html">⭐ Productores Favoritos</a>
+                <a href="perfil.html">⚙️ Mi Perfil</a>
+                <a href="#" id="btn-soporte">💬 Soporte</a>
+            </nav>
+        </aside>
+
+        <div class="zona-contenido">
+
+            <div class="cabecera-panel">
+                <div>
+                    <h2>Explorar Lotes Disponibles</h2>
+                    <p>Busque cultivos disponibles y reserve directamente con el productor.</p>
+                </div>
+                <a href="mis_reservas.html" class="btn-verde btn-borde">📋 Ver Mis Reservas</a>
+            </div>
+
+            <!-- SECCION: EXPLORAR LOTES DISPONIBLES -->
+            <div class="margen-top-32">
+                <div class="fila-titulo-panel">
+                    <h3 class="titulo-panel">Lotes Disponibles</h3>
+                </div>
+                <div class="barra-filtro">
+                    <input type="text" id="filtro-lote" class="campo-input" placeholder="Buscar producto...">
+                    <select id="filtro-categoria" class="campo-input input-angosto">
+                        <option value="">Todas las categorias</option>
+                        <option>Hortaliza</option>
+                        <option>Fruta</option>
+                        <option>Tuberculo</option>
+                        <option>Cereal</option>
+                    </select>
+                    <button class="btn-verde btn-borde" onclick="filtrarLotesDisponibles()">Filtrar</button>
+                </div>
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Productor</th>
+                            <th>Kg Disponibles</th>
+                            <th>Categoria</th>
+                            <th>Cosecha Est.</th>
+                            <th>Estado</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-lotes-disponibles">
+                        <tr><td colspan="7" class="celda-vacia">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <a href="#" id="btn-volver-arriba" title="Volver arriba">▲</a>
+
+    <!-- MODAL CREAR RESERVA: position fixed overlay -->
+    <div class="fondo-modal" id="modal-reserva">
+        <div class="caja-modal">
+            <button class="btn-cerrar-modal" onclick="cerrarModalReserva()">✕</button>
+            <p class="titulo-modal">Crear Reserva</p>
+            <div class="campo-grupo">
+                <label>Producto</label>
+                <input type="text" id="res-producto" class="campo-input" readonly>
+            </div>
+            <div class="campo-grupo">
+                <label>Productor</label>
+                <input type="text" id="res-productor" class="campo-input" readonly>
+            </div>
+            <div class="campo-grupo">
+                <label>Cantidad (kg)</label>
+                <input type="number" id="res-cantidad" class="campo-input" placeholder="Ej: 50" min="1">
+            </div>
+            <div class="campo-grupo">
+                <label>Fecha de Entrega Deseada</label>
+                <input type="date" id="res-fecha-entrega" class="campo-input">
+            </div>
+            <div class="fila-botones">
+                <button class="btn-verde" onclick="confirmarReserva()">Confirmar Reserva</button>
+                <button class="btn-verde btn-borde" onclick="cerrarModalReserva()">Cancelar</button>
+            </div>
+            <div id="alerta-reserva" class="alerta"></div>
+        </div>
+    </div>
+
+    <div id="modal-soporte" class="modal-soporte">
+    <div class="contenido-modal">
+        <span id="cerrar-soporte">&times;</span>
+        <h2>Centro de Soporte</h2>
+        <p>¿En qué podemos ayudarte?</p>
+
+        <form>
+            <input type="text" placeholder="Tu nombre" required>
+            <input type="email" placeholder="Tu correo" required>
+            <textarea placeholder="Describe tu problema..." rows="5"></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+</div>
+
+        <footer id="pie-pagina">
+        <p><strong>AgroDirecto</strong> — Del campo a su negocio, sin rodeos. 2026</p>
+    </footer>
+
+    <script src="api.js"></script>
+
+<script>
+    const btnSoporte = document.getElementById("btn-soporte");
+const modalSoporte = document.getElementById("modal-soporte");
+const cerrarSoporte = document.getElementById("cerrar-soporte");
+
+btnSoporte.addEventListener("click", function(e) {
+    e.preventDefault();
+    modalSoporte.style.display = "flex";
+});
+
+cerrarSoporte.addEventListener("click", function() {
+    modalSoporte.style.display = "none";
+});
+
+window.addEventListener("click", function(e) {
+    if (e.target === modalSoporte) {
+        modalSoporte.style.display = "none";
+    }
+});
+
+    let todosLotesDisponibles = [];
+    let loteSeleccionado = null;
+    const idComprador = parseInt(sessionStorage.getItem('usuario_id')) || 5;
+
+    document.getElementById('nombre-comprador').textContent =
+        sessionStorage.getItem('usuario_nombre') || 'Comprador';
+
+    window.addEventListener('scroll', () => {
+        document.getElementById('btn-volver-arriba')
+            .classList.toggle('visible', window.scrollY > 200);
+    });
+
+    async function cargarLotes() {
+        todosLotesDisponibles = await obtenerLotes({estado: 'Activo'});
+        renderLotesDisponibles(todosLotesDisponibles);
+    }
+
+    function renderLotesDisponibles(lista) {
+        const tb = document.getElementById('tabla-lotes-disponibles');
+        tb.innerHTML = lista.length ? lista.map(l => {
+            const disp = l.cantidad - (l.kg_reservados || 0);
+            return `<tr>
+                <td>${l.producto}</td>
+                <td>${l.productor || '—'}</td>
+                <td>${disp.toLocaleString('es-CO')} kg</td>
+                <td>${l.categoria}</td>
+                <td>${l.fecha_cosecha || '—'}</td>
+                <td><span class="etiqueta etiqueta-verde">${l.estado}</span></td>
+                <td><button class="btn-tabla btn-editar" onclick="abrirModalReserva(${l.id})">Reservar</button></td>
+            </tr>`;
+        }).join('') : '<tr><td colspan="7" class="celda-vacia">Sin lotes disponibles</td></tr>';
+    }
+
+    function filtrarLotesDisponibles() {
+        const q   = document.getElementById('filtro-lote').value.toLowerCase();
+        const cat = document.getElementById('filtro-categoria').value;
+        renderLotesDisponibles(todosLotesDisponibles.filter(l =>
+            (!q || l.producto.toLowerCase().includes(q)) &&
+            (!cat || l.categoria === cat)
+        ));
+    }
+
+    function abrirModalReserva(loteId) {
+        loteSeleccionado = todosLotesDisponibles.find(l => l.id === loteId);
+        if (!loteSeleccionado) return;
+        document.getElementById('res-producto').value  = loteSeleccionado.producto;
+        document.getElementById('res-productor').value = loteSeleccionado.productor || '—';
+        document.getElementById('res-cantidad').value      = '';
+        document.getElementById('res-fecha-entrega').value = loteSeleccionado.fecha_cosecha || '';
+        document.getElementById('alerta-reserva').className = 'alerta';
+        document.getElementById('modal-reserva').classList.add('abierto');
+    }
+
+    function cerrarModalReserva() {
+        document.getElementById('modal-reserva').classList.remove('abierto');
+    }
+
+    async function confirmarReserva() {
+        const alerta   = document.getElementById('alerta-reserva');
+        const cantidad = parseInt(document.getElementById('res-cantidad').value);
+        const fecha    = document.getElementById('res-fecha-entrega').value;
+
+        if (!cantidad || cantidad < 1) {
+            alerta.textContent = 'Ingrese una cantidad valida.';
+            alerta.className = 'alerta alerta-error visible';
+            return;
+        }
+
+        await crearReserva({
+            id: Date.now(),
+            comprador_id: idComprador,
+            lote_id: loteSeleccionado.id,
+            cantidad
+        });
+
+        alerta.textContent = '¡Reserva creada con exito!';
+        alerta.className = 'alerta alerta-ok visible';
+        setTimeout(async () => { cerrarModalReserva(); await cargarLotes(); }, 1200);
+    }
+
+    cargarLotes();
+</script>
+
+</body>
+</html>

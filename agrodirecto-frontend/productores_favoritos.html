@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <title>Productores Favoritos - AgroDirecto</title>
+</head>
+<body class="pagina-comprador">
+
+    <nav id="nav-principal">
+        <a href="index.html"><strong>AGRODIRECTO</strong></a>
+        <div class="links-nav">
+            <span class="texto-rol-nav">Panel Comprador</span>
+            <div class="icono-campana tiene-tooltip">
+                <span>🔔</span>
+                <span class="badge-campana" id="badge-notif">0</span>
+                <span class="texto-tooltip">notificaciones nuevas</span>
+            </div>
+            <a href="index.html" id="btn-logout" class="btn-verde btn-salir">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="layout-panel">
+
+        <!-- SIDEBAR: azul marino (pagina-comprador) -->
+        <aside class="sidebar">
+            <div class="perfil-sidebar">
+                <div class="avatar-usuario">🏪</div>
+                <h4 id="nombre-comprador">Comprador</h4>
+                <span><span class="badge-rol badge-comprador">Comprador</span></span>
+            </div>
+            <nav class="nav-sidebar">
+                <a href="panel_comprador.html">📊 Resumen</a>
+                <a href="explorar_lotes.html">🔍 Explorar Lotes</a>
+                <a href="mis_reservas.html">📋 Mis Reservas</a>
+                <a href="entregas.html">🚚 Proximas Entregas</a>
+                <a href="pagos.html">💳 Pagos y Facturas</a>
+                <a href="productores_favoritos.html" class="activo">⭐ Productores Favoritos</a>
+                <a href="perfil.html">⚙️ Mi Perfil</a>
+                <a href="#" id="btn-soporte">💬 Soporte</a>
+            </nav>
+        </aside>
+
+        <div class="zona-contenido">
+
+            <div class="cabecera-panel">
+                <div>
+                    <h2>Productores Favoritos</h2>
+                    <p>Guarde acceso rápido a los productores con los que más trabaja.</p>
+                </div>
+                <a href="explorar_lotes.html" class="btn-verde">🔍 Explorar Lotes</a>
+            </div>
+
+            <!-- SECCION: MIS FAVORITOS -->
+            <div class="margen-top-32">
+                <div class="fila-titulo-panel">
+                    <h3 class="titulo-panel">Mis Favoritos</h3>
+                </div>
+                <div class="grid-tarjetas" id="grid-favoritos">
+                    <p class="celda-vacia">Cargando...</p>
+                </div>
+            </div>
+
+            <!-- SECCION: AGREGAR NUEVO -->
+            <div class="margen-top-32">
+                <div class="fila-titulo-panel">
+                    <h3 class="titulo-panel">Agregar Productor</h3>
+                </div>
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            <th>Productor</th>
+                            <th>Ciudad</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-productores">
+                        <tr><td colspan="4" class="celda-vacia">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <a href="#" id="btn-volver-arriba" title="Volver arriba">▲</a>
+
+    <div id="modal-soporte" class="modal-soporte">
+    <div class="contenido-modal">
+        <span id="cerrar-soporte">&times;</span>
+        <h2>Centro de Soporte</h2>
+        <p>¿En qué podemos ayudarte?</p>
+
+        <form>
+            <input type="text" placeholder="Tu nombre" required>
+            <input type="email" placeholder="Tu correo" required>
+            <textarea placeholder="Describe tu problema..." rows="5"></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+</div>
+
+        <footer id="pie-pagina">
+        <p><strong>AgroDirecto</strong> — Del campo a su negocio, sin rodeos. 2026</p>
+    </footer>
+
+    <script src="api.js"></script>
+
+<script>
+    const btnSoporte = document.getElementById("btn-soporte");
+const modalSoporte = document.getElementById("modal-soporte");
+const cerrarSoporte = document.getElementById("cerrar-soporte");
+
+btnSoporte.addEventListener("click", function(e) {
+    e.preventDefault();
+    modalSoporte.style.display = "flex";
+});
+
+cerrarSoporte.addEventListener("click", function() {
+    modalSoporte.style.display = "none";
+});
+
+window.addEventListener("click", function(e) {
+    if (e.target === modalSoporte) {
+        modalSoporte.style.display = "none";
+    }
+});
+
+    let misFavoritos = [];
+    let todosProductores = [];
+    const idComprador = parseInt(sessionStorage.getItem('usuario_id')) || 5;
+
+    document.getElementById('nombre-comprador').textContent =
+        sessionStorage.getItem('usuario_nombre') || 'Comprador';
+
+    window.addEventListener('scroll', () => {
+        document.getElementById('btn-volver-arriba')
+            .classList.toggle('visible', window.scrollY > 200);
+    });
+
+    async function cargarTodo() {
+        // Se cargan en paralelo. Si /usuarios no soporta filtrar por rol_id
+        // desde el backend, aquí igual se filtra en el navegador con rol_id === 2.
+        const [favoritos, usuarios] = await Promise.all([
+            obtenerFavoritos(idComprador),
+            obtenerUsuarios({ rol_id: 2 }),
+        ]);
+
+        misFavoritos = favoritos;
+        todosProductores = usuarios.filter(u => u.rol_id === 2 || u.rol === 'Productor');
+
+        renderFavoritos();
+        renderProductores();
+    }
+
+    function renderFavoritos() {
+        const grid = document.getElementById('grid-favoritos');
+
+        if (!misFavoritos.length) {
+            grid.innerHTML = '<p class="celda-vacia">Aún no tienes productores favoritos. Agrega uno abajo.</p>';
+            return;
+        }
+
+        grid.innerHTML = misFavoritos.map(f => `
+            <div class="tarjeta texto-centrado tarjeta-sm">
+                <h3>${f.productor}</h3>
+                <p>${f.ciudad || 'Ciudad no registrada'}</p>
+                <p class="estrellas">★★★★★</p>
+                <div class="margen-top-16">
+                    <a href="explorar_lotes.html" class="btn-verde btn-borde">Ver lotes</a>
+                    <button class="btn-tabla btn-eliminar" onclick="quitarFavorito(${f.productor_id})">Quitar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderProductores() {
+        const tb = document.getElementById('tabla-productores');
+        const idsFavoritos = new Set(misFavoritos.map(f => f.productor_id));
+
+        tb.innerHTML = todosProductores.length ? todosProductores.map(p => {
+            const yaEsFavorito = idsFavoritos.has(p.id);
+            return `<tr>
+                <td>${p.nombre}</td>
+                <td>${p.ciudad || '—'}</td>
+                <td><span class="etiqueta ${p.estado === 'Activo' ? 'etiqueta-verde' : 'etiqueta-gris'}">${p.estado}</span></td>
+                <td><div class="acciones-tabla">
+                    ${yaEsFavorito
+                        ? '<span class="etiqueta etiqueta-azul">Ya es favorito</span>'
+                        : `<button class="btn-tabla btn-verde" onclick="marcarFavorito(${p.id})">⭐ Agregar</button>`}
+                </div></td>
+            </tr>`;
+        }).join('') : '<tr><td colspan="4" class="celda-vacia">No hay productores registrados</td></tr>';
+    }
+
+    async function marcarFavorito(productorId) {
+        try {
+            await agregarFavorito(idComprador, productorId);
+            await cargarTodo();
+        } catch (error) {
+            alert(error.message || 'No se pudo agregar el favorito');
+        }
+    }
+
+    async function quitarFavorito(productorId) {
+        if (!confirm('¿Quitar este productor de tus favoritos?')) return;
+        try {
+            await eliminarFavoritoApi(idComprador, productorId);
+            await cargarTodo();
+        } catch (error) {
+            alert(error.message || 'No se pudo quitar el favorito');
+        }
+    }
+
+    cargarTodo();
+</script>
+
+</body>
+</html>

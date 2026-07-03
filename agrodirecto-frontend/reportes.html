@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <title>Reportes - AgroDirecto</title>
+</head>
+<body class="pagina-productor">
+
+    <nav id="nav-principal">
+        <a href="index.html"><strong>AGRODIRECTO</strong></a>
+        <div class="links-nav">
+            <span class="texto-rol-nav">Panel Productor</span>
+            <div class="icono-campana tiene-tooltip">
+                <span>🔔</span>
+                <span class="badge-campana" id="badge-notif">—</span>
+                <span class="texto-tooltip" id="tooltip-notif">Notificaciones</span>
+            </div>
+            <a href="index.html" id="btn-logout" class="btn-verde btn-salir">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="layout-panel">
+
+        <!-- SIDEBAR: position sticky, verde bosque (pagina-productor) -->
+        <aside class="sidebar">
+            <div class="perfil-sidebar">
+                <div class="avatar-usuario">🌿</div>
+                <h4 id="nombre-productor">Productor</h4>
+                <span><span class="badge-rol badge-productor">Productor</span></span>
+            </div>
+            <nav class="nav-sidebar">
+                <a href="panel_productor.html">📊 Resumen</a>
+                <a href="mis_cultivos.html">🌱 Mis Cultivos</a>
+                <a href="trazabilidad.html">📍 Trazabilidad</a>
+                <a href="ventas_pagos.html">💰 Ventas y Pagos</a>
+                <a href="reportes.html" class="activo">📈 Reportes</a>
+                <a href="perfil.html">⚙️ Mi Perfil</a>
+                <a href="#" id="btn-soporte">💬 Soporte</a>
+            </nav>
+        </aside>
+
+        <div class="zona-contenido">
+
+            <div class="cabecera-panel">
+                <div>
+                    <h2>Reportes</h2>
+                    <p>Ingresos proyectados, produccion por categoria y comparativa mes a mes.</p>
+                </div>
+            </div>
+
+            <!-- RESUMEN RAPIDO -->
+            <div class="fila-stats">
+                <div class="stat-tarjeta" data-icono="🌱">
+                    <div class="stat-numero" id="stat-cultivos">—</div>
+                    <div class="stat-etiqueta">Cultivos Activos</div>
+                </div>
+                <div class="stat-tarjeta stat-marron" data-icono="⚖️">
+                    <div class="stat-numero" id="stat-kg-reservados">—</div>
+                    <div class="stat-etiqueta">Kg Reservados</div>
+                </div>
+                <div class="stat-tarjeta stat-naranja" data-icono="💰">
+                    <div class="stat-numero" id="stat-ingresos">—</div>
+                    <div class="stat-etiqueta">Ingresos Proyectados</div>
+                </div>
+            </div>
+
+            <!-- PRODUCCION POR CATEGORIA -->
+            <div class="margen-top-32">
+                <h3 class="titulo-panel-grande">Producción por categoría</h3>
+                <p>Kilogramos totales (reservados + disponibles) de sus lotes, agrupados por categoría.</p>
+                <div id="lista-categorias" class="margen-top-16">
+                    <p class="celda-vacia">Cargando...</p>
+                </div>
+            </div>
+
+            <!-- INGRESOS POR MES -->
+            <div class="margen-top-32">
+                <h3 class="titulo-panel-grande">Ingresos por mes</h3>
+                <p>Valor estimado de las reservas recibidas en los últimos 6 meses (cantidad reservada × precio por kg).</p>
+                <div id="lista-meses" class="margen-top-16">
+                    <p class="celda-vacia">Cargando...</p>
+                </div>
+            </div>
+
+            <!-- COMPARATIVA MENSUAL -->
+            <div class="margen-top-32">
+                <h3 class="titulo-panel-grande">Comparativa mes a mes</h3>
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Reservas recibidas</th>
+                            <th>Kg reservados</th>
+                            <th>Ingreso estimado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-comparativa">
+                        <tr><td colspan="4" class="celda-vacia">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <a href="#" id="btn-volver-arriba" title="Volver arriba">▲</a>
+
+    <div id="modal-soporte" class="modal-soporte">
+    <div class="contenido-modal">
+        <span id="cerrar-soporte">&times;</span>
+        <h2>Centro de Soporte</h2>
+        <p>¿En qué podemos ayudarte?</p>
+
+        <form id="form-soporte">
+            <input type="text" id="soporte-nombre" placeholder="Tu nombre" required>
+            <input type="email" id="soporte-correo" placeholder="Tu correo" required>
+            <textarea id="soporte-mensaje" placeholder="Describe tu problema..." rows="5" required></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+        <div id="alerta-soporte" class="alerta"></div>
+    </div>
+    </div>
+
+    <footer id="pie-pagina">
+        <p><strong>AgroDirecto</strong> — Del campo a su negocio, sin rodeos. 2026</p>
+    </footer>
+
+    <script src="api.js"></script>
+
+<script>
+(function() {
+    const btnSoporte = document.getElementById("btn-soporte");
+    const modalSoporte = document.getElementById("modal-soporte");
+    const cerrarSoporte = document.getElementById("cerrar-soporte");
+
+    btnSoporte.addEventListener("click", function(e) {
+        e.preventDefault();
+        document.getElementById("soporte-nombre").value = sessionStorage.getItem("usuario_nombre") || "";
+        document.getElementById("soporte-correo").value = sessionStorage.getItem("usuario_correo") || "";
+        modalSoporte.style.display = "flex";
+    });
+
+    cerrarSoporte.addEventListener("click", function() {
+        modalSoporte.style.display = "none";
+    });
+
+    window.addEventListener("click", function(e) {
+        if (e.target === modalSoporte) {
+            modalSoporte.style.display = "none";
+        }
+    });
+
+    document.getElementById("form-soporte").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const alerta = document.getElementById("alerta-soporte");
+        const boton = e.target.querySelector("button[type=submit]");
+        const datos = {
+            usuario_id: parseInt(sessionStorage.getItem("usuario_id")) || null,
+            nombre: document.getElementById("soporte-nombre").value.trim(),
+            correo: document.getElementById("soporte-correo").value.trim(),
+            mensaje: document.getElementById("soporte-mensaje").value.trim(),
+        };
+        boton.disabled = true;
+        try {
+            await enviarSoporte(datos);
+            alerta.textContent = "Mensaje enviado. El equipo de soporte lo revisará pronto.";
+            alerta.className = "alerta alerta-ok visible";
+            document.getElementById("form-soporte").reset();
+            setTimeout(() => { modalSoporte.style.display = "none"; alerta.className = "alerta"; }, 1800);
+        } catch (error) {
+            alerta.textContent = error.message || "No se pudo enviar el mensaje.";
+            alerta.className = "alerta alerta-error visible";
+        } finally {
+            boton.disabled = false;
+        }
+    });
+
+    const idProductor = parseInt(sessionStorage.getItem('usuario_id')) || 2;
+    const PRECIO_KG_DEFECTO = 2800; // fallback cuando el lote no tiene precio_kg definido
+
+    document.getElementById('nombre-productor').textContent =
+        sessionStorage.getItem('usuario_nombre') || 'Productor';
+
+    window.addEventListener('scroll', () => {
+        document.getElementById('btn-volver-arriba')
+            .classList.toggle('visible', window.scrollY > 200);
+    });
+
+    const NOMBRES_MES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+    function claveMes(fecha) {
+        const f = new Date(fecha);
+        return f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0');
+    }
+
+    function etiquetaMes(clave) {
+        const [anio, mes] = clave.split('-');
+        return NOMBRES_MES[parseInt(mes) - 1] + ' ' + anio;
+    }
+
+    function barraLista(items, formatoValor) {
+        if (!items.length) {
+            return '<p class="celda-vacia">Sin datos suficientes todavía</p>';
+        }
+        const max = Math.max(...items.map(i => i.valor), 1);
+        return items.map(i => {
+            const pct = Math.max(4, Math.round((i.valor / max) * 100));
+            return `
+                <div class="tarjeta-progreso margen-top-16">
+                    <div class="tarjeta-progreso-titulo">
+                        <span>${i.etiqueta}</span>
+                        <span>${formatoValor(i.valor)}</span>
+                    </div>
+                    <div class="barra-progreso-fondo">
+                        <div class="barra-progreso-relleno" style="width:${pct}%"></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    async function cargarReportes() {
+        const misLotes = await obtenerLotes({ productor_id: idProductor });
+        const todasReservas = await obtenerReservas({});
+        const idsLotes = new Set(misLotes.map(l => l.id));
+        const mapaLotes = {};
+        misLotes.forEach(l => { mapaLotes[l.id] = l; });
+
+        const reservasRecibidas = todasReservas.filter(r => idsLotes.has(r.lote_id));
+        const kgReservados = misLotes.reduce((s, l) => s + (l.kg_reservados || 0), 0);
+
+        // ── Stats generales ──────────────────────────────────────────────
+        document.getElementById('stat-cultivos').textContent      = misLotes.filter(l => l.estado === 'Activo').length;
+        document.getElementById('stat-kg-reservados').textContent = kgReservados.toLocaleString('es-CO') + ' kg';
+
+        let ingresoTotal = 0;
+        reservasRecibidas.forEach(r => {
+            const lote = mapaLotes[r.lote_id];
+            const precio = (lote && lote.precio_kg) || PRECIO_KG_DEFECTO;
+            ingresoTotal += r.cantidad * precio;
+        });
+        document.getElementById('stat-ingresos').textContent = '$' + Math.round(ingresoTotal).toLocaleString('es-CO');
+        document.getElementById('badge-notif').textContent   = reservasRecibidas.length;
+        document.getElementById('tooltip-notif').textContent = reservasRecibidas.length + ' reserva(s) recibidas';
+
+        // ── Producción por categoría ─────────────────────────────────────
+        const kgPorCategoria = {};
+        misLotes.forEach(l => {
+            kgPorCategoria[l.categoria] = (kgPorCategoria[l.categoria] || 0) + (l.cantidad || 0);
+        });
+        const itemsCategoria = Object.entries(kgPorCategoria)
+            .map(([categoria, kg]) => ({ etiqueta: categoria, valor: kg }))
+            .sort((a, b) => b.valor - a.valor);
+
+        document.getElementById('lista-categorias').innerHTML =
+            barraLista(itemsCategoria, v => v.toLocaleString('es-CO') + ' kg');
+
+        // ── Ingresos por mes (últimos 6 meses con datos, orden cronológico) ──
+        const ingresoPorMes = {};
+        const kgPorMes = {};
+        const reservasPorMes = {};
+
+        reservasRecibidas.forEach(r => {
+            const clave = claveMes(r.fecha);
+            const lote = mapaLotes[r.lote_id];
+            const precio = (lote && lote.precio_kg) || PRECIO_KG_DEFECTO;
+            ingresoPorMes[clave] = (ingresoPorMes[clave] || 0) + (r.cantidad * precio);
+            kgPorMes[clave]      = (kgPorMes[clave] || 0) + r.cantidad;
+            reservasPorMes[clave] = (reservasPorMes[clave] || 0) + 1;
+        });
+
+        const clavesOrdenadas = Object.keys(ingresoPorMes).sort();
+        const ultimosSeisMeses = clavesOrdenadas.slice(-6);
+
+        const itemsMes = ultimosSeisMeses.map(clave => ({
+            etiqueta: etiquetaMes(clave),
+            valor: Math.round(ingresoPorMes[clave]),
+        }));
+
+        document.getElementById('lista-meses').innerHTML =
+            barraLista(itemsMes, v => '$' + v.toLocaleString('es-CO'));
+
+        // ── Tabla comparativa ─────────────────────────────────────────────
+        const tb = document.getElementById('tabla-comparativa');
+        tb.innerHTML = clavesOrdenadas.length ? clavesOrdenadas.map(clave => `<tr>
+                <td>${etiquetaMes(clave)}</td>
+                <td>${reservasPorMes[clave]}</td>
+                <td>${kgPorMes[clave].toLocaleString('es-CO')} kg</td>
+                <td>$${Math.round(ingresoPorMes[clave]).toLocaleString('es-CO')}</td>
+            </tr>`).join('') :
+            '<tr><td colspan="4" class="celda-vacia">Aún no ha recibido reservas</td></tr>';
+    }
+
+    cargarReportes().catch(err => {
+        document.getElementById('lista-categorias').innerHTML =
+            '<p class="celda-vacia">No se pudieron cargar los reportes: ' + err.message + '</p>';
+    });
+})();
+</script>
+
+</body>
+</html>

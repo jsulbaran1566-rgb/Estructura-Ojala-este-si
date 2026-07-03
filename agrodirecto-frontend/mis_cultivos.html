@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <title>Mis Cultivos - AgroDirecto</title>
+</head>
+<body class="pagina-productor">
+
+    <nav id="nav-principal">
+        <a href="index.html"><strong>AGRODIRECTO</strong></a>
+        <div class="links-nav">
+            <span class="texto-rol-nav">Panel Productor</span>
+            <div class="icono-campana tiene-tooltip">
+                <span>🔔</span>
+                <span class="badge-campana" id="badge-notif">3</span>
+                <span class="texto-tooltip">3 notificaciones nuevas</span>
+            </div>
+            <a href="index.html" id="btn-logout" class="btn-verde btn-salir">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="layout-panel">
+
+        <!-- SIDEBAR: position sticky, verde bosque (pagina-productor) -->
+        <aside class="sidebar">
+            <div class="perfil-sidebar">
+                <div class="avatar-usuario">🌿</div>
+                <h4 id="nombre-productor">Productor</h4>
+                <span><span class="badge-rol badge-productor">Productor</span></span>
+            </div>
+            <nav class="nav-sidebar">
+                <a href="panel_productor.html">📊 Resumen</a>
+                <a href="mis_cultivos.html" class="activo">🌱 Mis Cultivos</a>
+                <a href="trazabilidad.html">📍 Trazabilidad</a>
+                <a href="ventas_pagos.html">💰 Ventas y Pagos</a>
+                <a href="reportes.html">📈 Reportes</a>
+                <a href="perfil.html">⚙️ Mi Perfil</a>
+                <a href="#" id="btn-soporte">💬 Soporte</a>
+            </nav>
+        </aside>
+
+        <div class="zona-contenido">
+
+            <div class="cabecera-panel">
+                <div>
+                    <h2>Mis Cultivos</h2>
+                    <p>Registre nuevos lotes indicando cantidad (kg), categoria y fecha de cosecha.</p>
+                </div>
+                <button class="btn-verde" onclick="abrirModal()">+ Nuevo Lote</button>
+            </div>
+
+            <!-- TABLA MIS LOTES -->
+            <div class="margen-top-32">
+                <div class="fila-titulo-panel">
+                    <h3 class="titulo-panel">Mis Lotes / Cultivos</h3>
+                </div>
+                <div class="barra-filtro">
+                    <input type="text" id="filtro-cultivo" class="campo-input" placeholder="Buscar cultivo...">
+                    <button class="btn-verde btn-borde" onclick="filtrarLotes()">Filtrar</button>
+                </div>
+                <table class="tabla-datos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cultivo</th>
+                            <th>Kg Totales</th>
+                            <th>Kg Reservados</th>
+                            <th>Categoria</th>
+                            <th>Fecha Cosecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-mis-lotes">
+                        <tr><td colspan="8" class="celda-vacia">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <a href="#" id="btn-volver-arriba" title="Volver arriba">▲</a>
+
+    <!-- MODAL NUEVO/EDITAR LOTE: position fixed overlay -->
+    <div class="fondo-modal" id="modal-lote">
+        <div class="caja-modal">
+            <button class="btn-cerrar-modal" onclick="cerrarModal()">✕</button>
+            <p class="titulo-modal" id="titulo-modal-lote">Nuevo Lote</p>
+            <input type="hidden" id="lote-id">
+            <div class="fila-campos">
+                <div class="campo-grupo">
+                    <label>Producto / Cultivo</label>
+                    <input type="text" id="lote-producto" class="campo-input" placeholder="Ej: Tomate Chonto">
+                </div>
+                <div class="campo-grupo">
+                    <label>Cantidad (kg)</label>
+                    <input type="number" id="lote-cantidad" class="campo-input" placeholder="Ej: 2000" min="1">
+                </div>
+            </div>
+            <div class="fila-campos">
+                <div class="campo-grupo">
+                    <label>Categoria</label>
+                    <select id="lote-categoria" class="campo-input">
+                        <option>Hortaliza</option>
+                        <option>Fruta</option>
+                        <option>Tuberculo</option>
+                        <option>Cereal</option>
+                        <option>Leguminosa</option>
+                    </select>
+                </div>
+                <div class="campo-grupo">
+                    <label>Fecha Estimada de Cosecha</label>
+                    <input type="date" id="lote-fecha" class="campo-input">
+                </div>
+            </div>
+            <div class="campo-grupo">
+                <label>Estado</label>
+                <select id="lote-estado" class="campo-input">
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+            </div>
+            <div class="fila-botones">
+                <button class="btn-verde" onclick="guardarLote()">Guardar</button>
+                <button class="btn-verde btn-borde" onclick="cerrarModal()">Cancelar</button>
+            </div>
+            <div id="alerta-modal-lote" class="alerta"></div>
+        </div>
+    </div>
+
+    <div id="modal-soporte" class="modal-soporte">
+    <div class="contenido-modal">
+        <span id="cerrar-soporte">&times;</span>
+        <h2>Centro de Soporte</h2>
+        <p>¿En qué podemos ayudarte?</p>
+
+        <form>
+            <input type="text" placeholder="Tu nombre" required>
+            <input type="email" placeholder="Tu correo" required>
+            <textarea placeholder="Describe tu problema..." rows="5"></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+    </div>
+
+    <footer id="pie-pagina">
+        <p><strong>AgroDirecto</strong> — Del campo a su negocio, sin rodeos. 2026</p>
+    </footer>
+
+    <script src="api.js"></script>
+
+<script>
+    const btnSoporte = document.getElementById("btn-soporte");
+    const modalSoporte = document.getElementById("modal-soporte");
+    const cerrarSoporte = document.getElementById("cerrar-soporte");
+
+    btnSoporte.addEventListener("click", function(e) {
+    e.preventDefault();
+    modalSoporte.style.display = "flex";
+    });
+
+    cerrarSoporte.addEventListener("click", function() {
+    modalSoporte.style.display = "none";
+    });
+
+    window.addEventListener("click", function(e) {
+    if (e.target === modalSoporte) {
+        modalSoporte.style.display = "none";
+    }
+    });
+
+    let misLotes = [];
+    let misLotesFiltrados = [];
+    const idProductor = parseInt(sessionStorage.getItem('usuario_id')) || 2;
+
+    document.getElementById('nombre-productor').textContent =
+        sessionStorage.getItem('usuario_nombre') || 'Productor';
+
+    window.addEventListener('scroll', () => {
+        document.getElementById('btn-volver-arriba')
+            .classList.toggle('visible', window.scrollY > 200);
+    });
+
+    async function cargarLotes() {
+        const lotes = await obtenerLotes({});
+        misLotes = lotes.filter(l => l.productor_id === idProductor);
+        misLotesFiltrados = misLotes;
+        document.getElementById('badge-notif').textContent = 0;
+        renderTablaMisLotes();
+    }
+
+    function renderTablaMisLotes() {
+        const tb = document.getElementById('tabla-mis-lotes');
+        tb.innerHTML = misLotesFiltrados.length ? misLotesFiltrados.map(l => `
+            <tr>
+                <td>${l.id}</td>
+                <td>${l.producto}</td>
+                <td>${l.cantidad.toLocaleString('es-CO')} kg</td>
+                <td>${l.kg_reservados || 0} kg</td>
+                <td>${l.categoria}</td>
+                <td>${l.fecha_cosecha || '—'}</td>
+                <td><span class="etiqueta ${l.estado === 'Activo' ? 'etiqueta-verde' : 'etiqueta-gris'}">${l.estado}</span></td>
+                <td><div class="acciones-tabla">
+                    <button class="btn-tabla btn-editar"   onclick="editarLote(${l.id})">Editar</button>
+                    <button class="btn-tabla btn-eliminar" onclick="eliminarLote(${l.id})">Eliminar</button>
+                </div></td>
+            </tr>`).join('') :
+            '<tr><td colspan="8" class="celda-vacia">Sin lotes registrados</td></tr>';
+    }
+
+    function filtrarLotes() {
+        const q = document.getElementById('filtro-cultivo').value.toLowerCase();
+        misLotesFiltrados = misLotes.filter(l => !q || l.producto.toLowerCase().includes(q));
+        renderTablaMisLotes();
+    }
+
+    function abrirModal(id = null) {
+        const modal = document.getElementById('modal-lote');
+        document.getElementById('lote-id').value = id || '';
+        document.getElementById('titulo-modal-lote').textContent = id ? 'Editar Lote' : 'Nuevo Lote';
+        if (!id) {
+            ['lote-producto','lote-cantidad','lote-fecha'].forEach(i => {
+                document.getElementById(i).value = '';
+            });
+            document.getElementById('lote-categoria').value = 'Hortaliza';
+            document.getElementById('lote-estado').value = 'Activo';
+        }
+        document.getElementById('alerta-modal-lote').className = 'alerta';
+        modal.classList.add('abierto');
+    }
+
+    function cerrarModal() {
+        document.getElementById('modal-lote').classList.remove('abierto');
+    }
+
+    async function editarLote(id) {
+        const l = misLotes.find(x => x.id === id);
+        if (!l) return;
+        document.getElementById('lote-producto').value  = l.producto;
+        document.getElementById('lote-cantidad').value  = l.cantidad;
+        document.getElementById('lote-categoria').value = l.categoria;
+        document.getElementById('lote-fecha').value     = l.fecha_cosecha || '';
+        document.getElementById('lote-estado').value    = l.estado;
+        abrirModal(id);
+    }
+
+    async function guardarLote() {
+        const alertaM = document.getElementById('alerta-modal-lote');
+        const id      = parseInt(document.getElementById('lote-id').value);
+        const datos   = {
+            producto:      document.getElementById('lote-producto').value.trim(),
+            cantidad:      parseInt(document.getElementById('lote-cantidad').value) || 0,
+            categoria:     document.getElementById('lote-categoria').value,
+            productor_id:  idProductor,
+            fecha_cosecha: document.getElementById('lote-fecha').value,
+            estado:        document.getElementById('lote-estado').value,
+        };
+        if (!datos.producto || datos.cantidad < 1) {
+            alertaM.textContent = 'Producto y cantidad son obligatorios.';
+            alertaM.className = 'alerta alerta-error visible';
+            return;
+        }
+        try {
+            if (id) {
+                await editarLoteApi(id, datos);
+            } else {
+                datos.id = Date.now();
+                datos.kg_reservados = 0;
+                await registrarLote(datos);
+            }
+            alertaM.textContent = id ? 'Lote actualizado.' : 'Lote creado.';
+            alertaM.className = 'alerta alerta-ok visible';
+            setTimeout(() => { cerrarModal(); cargarLotes(); }, 900);
+        } catch (e) {
+            alertaM.textContent = 'Error al guardar el lote.';
+            alertaM.className = 'alerta alerta-error visible';
+        }
+    }
+
+    async function eliminarLote(id) {
+        if (!confirm('¿Eliminar este lote?')) return;
+        try {
+            await eliminarLoteApi(id);
+            await cargarLotes();
+        } catch (e) {
+            alert('Error al eliminar el lote.');
+        }
+    }
+
+    cargarLotes();
+</script>
+
+</body>
+</html>

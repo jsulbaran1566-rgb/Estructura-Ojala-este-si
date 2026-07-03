@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <title>Trazabilidad - AgroDirecto</title>
+</head>
+<body class="pagina-productor">
+
+    <nav id="nav-principal">
+        <a href="index.html"><strong>AGRODIRECTO</strong></a>
+        <div class="links-nav">
+            <span class="texto-rol-nav">Panel Productor</span>
+            <div class="icono-campana tiene-tooltip">
+                <span>🔔</span>
+                <span class="badge-campana" id="badge-notif">—</span>
+                <span class="texto-tooltip" id="tooltip-notif">Notificaciones</span>
+            </div>
+            <a href="index.html" id="btn-logout" class="btn-verde btn-salir">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="layout-panel">
+
+        <!-- SIDEBAR: position sticky, verde bosque (pagina-productor) -->
+        <aside class="sidebar">
+            <div class="perfil-sidebar">
+                <div class="avatar-usuario">🌿</div>
+                <h4 id="nombre-productor">Productor</h4>
+                <span><span class="badge-rol badge-productor">Productor</span></span>
+            </div>
+            <nav class="nav-sidebar">
+                <a href="panel_productor.html">📊 Resumen</a>
+                <a href="mis_cultivos.html">🌱 Mis Cultivos</a>
+                <a href="trazabilidad.html" class="activo">📍 Trazabilidad</a>
+                <a href="ventas_pagos.html">💰 Ventas y Pagos</a>
+                <a href="reportes.html">📈 Reportes</a>
+                <a href="perfil.html">⚙️ Mi Perfil</a>
+                <a href="#" id="btn-soporte">💬 Soporte</a>
+            </nav>
+        </aside>
+
+        <div class="zona-contenido">
+
+            <div class="cabecera-panel">
+                <div>
+                    <h2>Trazabilidad</h2>
+                    <p>Avance de venta de cada lote y cronología de eventos registrados sobre sus cultivos.</p>
+                </div>
+            </div>
+
+            <!-- ESTADISTICAS -->
+            <div class="fila-stats">
+                <div class="stat-tarjeta" data-icono="🌱">
+                    <div class="stat-numero" id="stat-lotes">—</div>
+                    <div class="stat-etiqueta">Lotes en Seguimiento</div>
+                </div>
+                <div class="stat-tarjeta stat-azul" data-icono="📋">
+                    <div class="stat-numero" id="stat-eventos">—</div>
+                    <div class="stat-etiqueta">Eventos Registrados</div>
+                </div>
+                <div class="stat-tarjeta stat-marron" data-icono="📦">
+                    <div class="stat-numero" id="stat-cambios-reserva">—</div>
+                    <div class="stat-etiqueta">Cambios de Reserva</div>
+                </div>
+                <div class="stat-tarjeta stat-naranja" data-icono="📅">
+                    <div class="stat-numero" id="stat-ultimo">—</div>
+                    <div class="stat-etiqueta">Última Actualización</div>
+                </div>
+            </div>
+
+            <!-- AVANCE POR LOTE -->
+            <div class="margen-top-32">
+                <h3 class="titulo-panel-grande">Avance de venta por lote</h3>
+                <p class="texto-ayuda">Porcentaje de kilogramos ya reservados sobre el total disponible en cada lote activo.</p>
+                <div class="grid-tarjetas" id="grid-avance-lotes">
+                    <p class="celda-vacia">Cargando...</p>
+                </div>
+            </div>
+
+            <!-- CRONOLOGIA -->
+            <div class="margen-top-32">
+                <h3 class="titulo-panel-grande">Cronología de eventos</h3>
+
+                <div class="tabs-historial margen-top-24">
+                    <button class="btn-tab activo" id="tab-seguimiento" onclick="cambiarTab('seguimiento')">
+                        🌱 Seguimiento de Cultivos
+                    </button>
+                    <button class="btn-tab" id="tab-reservas-hist" onclick="cambiarTab('reservas')">
+                        📋 Estados de Reservas
+                    </button>
+                </div>
+
+                <div class="barra-filtro margen-top-24">
+                    <select id="filtro-lote" class="campo-input" onchange="aplicarFiltroLote()">
+                        <option value="">Todos los lotes</option>
+                    </select>
+                </div>
+
+                <!-- TABLA SEGUIMIENTO -->
+                <div id="seccion-seguimiento">
+                    <table class="tabla-datos">
+                        <thead>
+                            <tr>
+                                <th>Acción Registrada</th>
+                                <th>Lote (ID)</th>
+                                <th>Producto</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-seguimiento">
+                            <tr><td colspan="4" class="celda-vacia">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TABLA ESTADOS DE RESERVA -->
+                <div id="seccion-hist-reservas" class="notificacion-oculta">
+                    <table class="tabla-datos">
+                        <thead>
+                            <tr>
+                                <th>Reserva</th>
+                                <th>Producto</th>
+                                <th>Comprador</th>
+                                <th>Estado Registrado</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-hist-reservas">
+                            <tr><td colspan="5" class="celda-vacia">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <a href="#" id="btn-volver-arriba" title="Volver arriba">▲</a>
+
+    <div id="modal-soporte" class="modal-soporte">
+    <div class="contenido-modal">
+        <span id="cerrar-soporte">&times;</span>
+        <h2>Centro de Soporte</h2>
+        <p>¿En qué podemos ayudarte?</p>
+
+        <form id="form-soporte">
+            <input type="text" id="soporte-nombre" placeholder="Tu nombre" required>
+            <input type="email" id="soporte-correo" placeholder="Tu correo" required>
+            <textarea id="soporte-mensaje" placeholder="Describe tu problema..." rows="5" required></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+        <div id="alerta-soporte" class="alerta"></div>
+    </div>
+    </div>
+
+    <footer id="pie-pagina">
+        <p><strong>AgroDirecto</strong> — Del campo a su negocio, sin rodeos. 2026</p>
+    </footer>
+
+    <script src="api.js"></script>
+
+<script>
+(function() {
+    const btnSoporte = document.getElementById("btn-soporte");
+    const modalSoporte = document.getElementById("modal-soporte");
+    const cerrarSoporte = document.getElementById("cerrar-soporte");
+
+    btnSoporte.addEventListener("click", function(e) {
+        e.preventDefault();
+        document.getElementById("soporte-nombre").value = sessionStorage.getItem("usuario_nombre") || "";
+        document.getElementById("soporte-correo").value = sessionStorage.getItem("usuario_correo") || "";
+        modalSoporte.style.display = "flex";
+    });
+
+    cerrarSoporte.addEventListener("click", function() {
+        modalSoporte.style.display = "none";
+    });
+
+    window.addEventListener("click", function(e) {
+        if (e.target === modalSoporte) {
+            modalSoporte.style.display = "none";
+        }
+    });
+
+    document.getElementById("form-soporte").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const alerta = document.getElementById("alerta-soporte");
+        const boton = e.target.querySelector("button[type=submit]");
+        const datos = {
+            usuario_id: parseInt(sessionStorage.getItem("usuario_id")) || null,
+            nombre: document.getElementById("soporte-nombre").value.trim(),
+            correo: document.getElementById("soporte-correo").value.trim(),
+            mensaje: document.getElementById("soporte-mensaje").value.trim(),
+        };
+        boton.disabled = true;
+        try {
+            await enviarSoporte(datos);
+            alerta.textContent = "Mensaje enviado. El equipo de soporte lo revisará pronto.";
+            alerta.className = "alerta alerta-ok visible";
+            document.getElementById("form-soporte").reset();
+            setTimeout(() => { modalSoporte.style.display = "none"; alerta.className = "alerta"; }, 1800);
+        } catch (error) {
+            alerta.textContent = error.message || "No se pudo enviar el mensaje.";
+            alerta.className = "alerta alerta-error visible";
+        } finally {
+            boton.disabled = false;
+        }
+    });
+
+    const idProductor = parseInt(sessionStorage.getItem('usuario_id')) || 2;
+
+    document.getElementById('nombre-productor').textContent =
+        sessionStorage.getItem('usuario_nombre') || 'Productor';
+
+    window.addEventListener('scroll', () => {
+        document.getElementById('btn-volver-arriba')
+            .classList.toggle('visible', window.scrollY > 200);
+    });
+
+    // Datos en memoria, ya filtrados para este productor
+    let seguimientoPropio = [];
+    let historialReservasPropio = [];
+    let loteSeleccionado = '';
+
+    function formatoFecha(fecha) {
+        if (!fecha) return '—';
+        const f = new Date(fecha);
+        if (isNaN(f)) return fecha;
+        return f.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function colorProgreso(pct) {
+        if (pct >= 100) return 'progreso-rojo';
+        if (pct >= 60) return 'progreso-naranja';
+        return '';
+    }
+
+    function renderAvanceLotes(lotes) {
+        const grid = document.getElementById('grid-avance-lotes');
+
+        if (!lotes.length) {
+            grid.innerHTML = '<p class="celda-vacia">Aún no tiene lotes registrados. <a href="mis_cultivos.html">Cree su primer lote</a>.</p>';
+            return;
+        }
+
+        grid.innerHTML = lotes.map(l => {
+            const reservado = l.kg_reservados || 0;
+            const total = l.cantidad || 0;
+            const pct = total > 0 ? Math.min(100, Math.round((reservado / total) * 100)) : 0;
+            return `
+                <div class="tarjeta-progreso">
+                    <div class="tarjeta-progreso-titulo">
+                        <span>${l.producto} <span class="etiqueta ${l.estado === 'Activo' ? 'etiqueta-verde' : 'etiqueta-gris'}">${l.estado}</span></span>
+                        <span>${pct}%</span>
+                    </div>
+                    <div class="barra-progreso-fondo">
+                        <div class="barra-progreso-relleno ${colorProgreso(pct)}" style="width:${pct}%"></div>
+                    </div>
+                    <p>${reservado.toLocaleString('es-CO')} kg reservados de ${total.toLocaleString('es-CO')} kg · Lote #${l.id} · ${l.categoria}</p>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderSeguimiento() {
+        const tb = document.getElementById('tabla-seguimiento');
+        const lista = loteSeleccionado
+            ? seguimientoPropio.filter(h => String(h.lote_id) === loteSeleccionado)
+            : seguimientoPropio;
+
+        tb.innerHTML = lista.length ? lista.map(h => `<tr>
+                <td>${h.accion || ''}</td>
+                <td>${h.lote_id ? '#' + h.lote_id : '—'}</td>
+                <td>${h.producto || ''}</td>
+                <td>${formatoFecha(h.fecha)}</td>
+            </tr>`).join('') :
+            '<tr><td colspan="4" class="celda-vacia">Sin eventos registrados para este lote</td></tr>';
+    }
+
+    function renderHistReservas() {
+        const tb = document.getElementById('tabla-hist-reservas');
+        const lista = loteSeleccionado
+            ? historialReservasPropio.filter(h => String(h.lote_id) === loteSeleccionado)
+            : historialReservasPropio;
+
+        tb.innerHTML = lista.length ? lista.map(h => `<tr>
+                <td>#${h.reserva_id}</td>
+                <td>${h.producto || ''}</td>
+                <td>${h.comprador || ''}</td>
+                <td><span class="etiqueta ${etiquetaEstado(h.estado)}">${h.estado}</span></td>
+                <td>${formatoFecha(h.fecha)}</td>
+            </tr>`).join('') :
+            '<tr><td colspan="5" class="celda-vacia">Sin cambios de estado registrados para este lote</td></tr>';
+    }
+
+    function etiquetaEstado(estado) {
+        switch (estado) {
+            case 'Confirmada': return 'etiqueta-azul';
+            case 'Entregada':  return 'etiqueta-verde';
+            case 'Cancelada':  return 'etiqueta-gris';
+            default:           return 'etiqueta-naranja'; // Pendiente
+        }
+    }
+
+    window.cambiarTab = function(tab) {
+        document.getElementById('tab-seguimiento').classList.toggle('activo', tab === 'seguimiento');
+        document.getElementById('tab-reservas-hist').classList.toggle('activo', tab === 'reservas');
+        document.getElementById('seccion-seguimiento').style.display = tab === 'seguimiento' ? '' : 'none';
+        document.getElementById('seccion-hist-reservas').style.display = tab === 'reservas' ? '' : 'none';
+    };
+
+    window.aplicarFiltroLote = function() {
+        loteSeleccionado = document.getElementById('filtro-lote').value;
+        renderSeguimiento();
+        renderHistReservas();
+    };
+
+    async function cargarTrazabilidad() {
+        // 1. Lotes propios
+        const misLotes = await obtenerLotes({ productor_id: idProductor });
+        const idsLotes = new Set(misLotes.map(l => l.id));
+
+        // 2. Seguimiento de cultivos: viene con lote_id directo, se filtra por los lotes propios
+        const seguimiento = await obtenerHistorialSeguimiento();
+        seguimientoPropio = seguimiento
+            .filter(h => idsLotes.has(h.lote_id))
+            .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        // 3. Reservas de los lotes propios (para saber qué reserva_id son "mías")
+        const todasReservas = await obtenerReservas({});
+        const reservasPropias = todasReservas.filter(r => idsLotes.has(r.lote_id));
+        const mapaReservaLote = {};
+        reservasPropias.forEach(r => { mapaReservaLote[r.id] = r.lote_id; });
+        const idsReservasPropias = new Set(reservasPropias.map(r => r.id));
+
+        // 4. Historial de reservas: no trae lote_id, se cruza por reserva_id
+        const histReservas = await obtenerHistorialReservas();
+        historialReservasPropio = histReservas
+            .filter(h => idsReservasPropias.has(h.reserva_id))
+            .map(h => ({ ...h, lote_id: mapaReservaLote[h.reserva_id] }))
+            .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+        // 5. Estadísticas
+        const lotesActivos = misLotes.filter(l => l.estado === 'Activo');
+        document.getElementById('stat-lotes').textContent = lotesActivos.length;
+        document.getElementById('stat-eventos').textContent = seguimientoPropio.length;
+        document.getElementById('stat-cambios-reserva').textContent = historialReservasPropio.length;
+
+        const todasFechas = [...seguimientoPropio.map(h => h.fecha), ...historialReservasPropio.map(h => h.fecha)]
+            .filter(Boolean)
+            .map(f => new Date(f));
+        const ultima = todasFechas.length ? new Date(Math.max(...todasFechas)) : null;
+        document.getElementById('stat-ultimo').textContent = ultima ? formatoFecha(ultima) : '—';
+
+        document.getElementById('badge-notif').textContent = historialReservasPropio.length;
+        document.getElementById('tooltip-notif').textContent =
+            historialReservasPropio.length + ' cambio(s) de estado en sus reservas';
+
+        // 6. Selector de lote
+        const select = document.getElementById('filtro-lote');
+        select.innerHTML = '<option value="">Todos los lotes</option>' +
+            misLotes.map(l => `<option value="${l.id}">#${l.id} — ${l.producto}</option>`).join('');
+
+        // 7. Render
+        renderAvanceLotes(lotesActivos.length ? lotesActivos : misLotes);
+        renderSeguimiento();
+        renderHistReservas();
+    }
+
+    cargarTrazabilidad().catch(err => {
+        document.getElementById('grid-avance-lotes').innerHTML =
+            '<p class="celda-vacia">No se pudo cargar la trazabilidad: ' + err.message + '</p>';
+    });
+})();
+</script>
+
+</body>
+</html>

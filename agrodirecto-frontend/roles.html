@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="imagenes.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <title>Roles - AgroDirecto</title>
+</head>
+<body class="pagina-admin">
+
+    <nav id="nav-principal">
+        <a href="index.html"><strong>AGRODIRECTO</strong></a>
+        <div class="links-nav">
+            <a href="index.html" class="btn-verde btn-salir">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="layout-panel">
+        <aside class="sidebar">
+            <div class="perfil-sidebar">
+                <div class="avatar-usuario">🛡️</div>
+                <h4 id="nombre-admin">Administrador</h4>
+                <span><span class="badge-rol badge-admin">Admin</span></span>
+            </div>
+            <nav class="nav-sidebar">
+                <a href="panel_admin.html">📊 Resumen</a>
+                <a href="usuarios.html">👥 Usuarios</a>
+                <a href="roles.html" class="activo">🔐 Roles</a>
+                <a href="proveedores.html">🚚 Proveedores</a>
+                <a href="lotes.html">🌱 Lotes</a>
+                <a href="historial.html">📋 Historial</a>
+                <a href="soporte.html">📨 Tickets de Soporte</a>
+                <a href="#" id="btn-soporte">💬 Soporte</a>
+            </nav>
+        </aside>
+
+        <div class="zona-contenido">
+            <div class="banner-panel banner-roles">
+                <span>🔐 Roles y permisos del equipo AgroDirecto</span>
+            </div>
+
+            <div class="cabecera-panel">
+                <div>
+                    <h2>Gestion de Roles <span class="badge-rol badge-admin">ADMIN</span></h2>
+                    <p>Define los roles y permisos del sistema</p>
+                </div>
+                <button class="btn-verde" onclick="abrirModal()">+ Nuevo Rol</button>
+            </div>
+
+            <div id="alerta-roles" class="alerta"></div>
+
+            <table class="tabla-datos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre del Rol</th>
+                        <th>Descripcion</th>
+                        <th>Permisos</th>
+                        <th>Usuarios Asignados</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-roles">
+                    <tr><td colspan="6" class="celda-vacia">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a href="#" id="btn-volver-arriba" title="Volver arriba">▲</a>
+
+    <!-- MODAL ROL -->
+    <div class="fondo-modal" id="modal-rol">
+        <div class="caja-modal">
+            <button class="btn-cerrar-modal" onclick="cerrarModal()">✕</button>
+            <p class="titulo-modal" id="titulo-modal-rol">Nuevo Rol</p>
+            <input type="hidden" id="rol-id">
+            <div class="campo-grupo">
+                <label>Nombre del Rol</label>
+                <input type="text" id="rol-nombre" class="campo-input" placeholder="Ej: Supervisor">
+            </div>
+            <div class="campo-grupo">
+                <label>Descripcion</label>
+                <textarea id="rol-descripcion" class="campo-input campo-textarea" rows="2"
+                          placeholder="Que puede hacer este rol..."></textarea>
+            </div>
+            <div class="campo-grupo">
+                <label>Permisos (separados por coma)</label>
+                <input type="text" id="rol-permisos" class="campo-input"
+                       placeholder="Ver, Crear, Editar, Eliminar">
+            </div>
+            <div class="fila-botones">
+                <button class="btn-verde" onclick="guardarRol()">Guardar</button>
+                <button class="btn-verde btn-borde" onclick="cerrarModal()">Cancelar</button>
+            </div>
+            <div id="alerta-modal-rol" class="alerta"></div>
+        </div>
+    </div>
+
+    <div id="modal-soporte" class="modal-soporte">
+    <div class="contenido-modal">
+        <span id="cerrar-soporte">&times;</span>
+        <h2>Centro de Soporte</h2>
+        <p>¿En qué podemos ayudarte?</p>
+
+        <form>
+            <input type="text" placeholder="Tu nombre" required>
+            <input type="email" placeholder="Tu correo" required>
+            <textarea placeholder="Describe tu problema..." rows="5"></textarea>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+</div>
+
+    <footer id="pie-pagina">
+        <p><strong>AgroDirecto</strong> — Del campo a su negocio, sin rodeos. 2026</p>
+    </footer>
+
+    <script src="api.js"></script>
+
+<script>
+    const btnSoporte = document.getElementById("btn-soporte");
+const modalSoporte = document.getElementById("modal-soporte");
+const cerrarSoporte = document.getElementById("cerrar-soporte");
+
+btnSoporte.addEventListener("click", function(e) {
+    e.preventDefault();
+    modalSoporte.style.display = "flex";
+});
+
+cerrarSoporte.addEventListener("click", function() {
+    modalSoporte.style.display = "none";
+});
+
+window.addEventListener("click", function(e) {
+    if (e.target === modalSoporte) {
+        modalSoporte.style.display = "none";
+    }
+});
+
+    let listaRoles = [];
+    let listaUsuarios = [];
+
+    document.getElementById('nombre-admin').textContent =
+        sessionStorage.getItem('usuario_nombre') || 'Administrador';
+
+    window.addEventListener('scroll', () => {
+        document.getElementById('btn-volver-arriba')
+            .classList.toggle('visible', window.scrollY > 200);
+    });
+
+    async function cargarRoles() {
+        const tb = document.getElementById('tabla-roles');
+        try {
+            [listaRoles, listaUsuarios] = await Promise.all([obtenerRoles(), obtenerUsuarios()]);
+            tb.innerHTML = listaRoles.length ? listaRoles.map(r => {
+                const asignados = listaUsuarios.filter(u => u.rol === r.nombre).length;
+                return `<tr>
+                    <td>${r.id}</td>
+                    <td><strong>${r.nombre}</strong></td>
+                    <td>${r.descripcion || '—'}</td>
+                    <td>${r.permisos || 'Ver'}</td>
+                    <td>${asignados}</td>
+                    <td><div class="acciones-tabla">
+                        <button class="btn-tabla btn-editar"   onclick="editarRol(${r.id})">Editar</button>
+                        <button class="btn-tabla btn-eliminar" onclick="eliminarRol(${r.id})">Eliminar</button>
+                    </div></td>
+                </tr>`;
+            }).join('') : '<tr><td colspan="6" class="celda-vacia">Sin roles</td></tr>';
+        } catch (error) {
+            tb.innerHTML = `<tr><td colspan="6" class="celda-vacia" style="color:#c00;">${error.message}</td></tr>`;
+        }
+    }
+
+    function abrirModal(id = null) {
+        document.getElementById('rol-id').value = id || '';
+        document.getElementById('titulo-modal-rol').textContent = id ? 'Editar Rol' : 'Nuevo Rol';
+        if (!id) {
+            ['rol-nombre','rol-descripcion','rol-permisos'].forEach(i =>
+                document.getElementById(i).value = '');
+        }
+        document.getElementById('alerta-modal-rol').className = 'alerta';
+        document.getElementById('modal-rol').classList.add('abierto');
+    }
+
+    function cerrarModal() {
+        document.getElementById('modal-rol').classList.remove('abierto');
+    }
+
+    function editarRol(id) {
+        const r = listaRoles.find(x => x.id === id);
+        if (!r) return;
+        document.getElementById('rol-nombre').value      = r.nombre;
+        document.getElementById('rol-descripcion').value = r.descripcion || '';
+        document.getElementById('rol-permisos').value    = r.permisos || '';
+        abrirModal(id);
+    }
+
+    async function guardarRol() {
+        const alerta = document.getElementById('alerta-modal-rol');
+        const id     = parseInt(document.getElementById('rol-id').value);
+        const datos  = {
+            nombre:      document.getElementById('rol-nombre').value.trim(),
+            descripcion: document.getElementById('rol-descripcion').value.trim(),
+            permisos:    document.getElementById('rol-permisos').value.trim()
+        };
+        if (!datos.nombre) {
+            alerta.textContent = 'El nombre del rol es obligatorio.';
+            alerta.className = 'alerta alerta-error visible';
+            return;
+        }
+        try {
+            if (id) {
+                await editarRolApi(id, datos);
+            } else {
+                datos.id = listaRoles.length ? Math.max(...listaRoles.map(r => r.id)) + 1 : 1;
+                await registrarRol(datos);
+            }
+            alerta.textContent = id ? 'Rol actualizado.' : 'Rol creado.';
+            alerta.className = 'alerta alerta-ok visible';
+            setTimeout(() => { cerrarModal(); cargarRoles(); }, 900);
+        } catch (error) {
+            alerta.textContent = error.message || 'No se pudo guardar el rol.';
+            alerta.className = 'alerta alerta-error visible';
+        }
+    }
+
+    async function eliminarRol(id) {
+        const alerta = document.getElementById('alerta-roles');
+        if (!confirm('¿Eliminar este rol?')) return;
+        try {
+            await eliminarRolApi(id);
+            alerta.textContent = 'Rol eliminado.';
+            alerta.className = 'alerta alerta-ok visible';
+            cargarRoles();
+        } catch (error) {
+            alerta.textContent = error.message || 'No se pudo eliminar el rol.';
+            alerta.className = 'alerta alerta-error visible';
+        }
+        setTimeout(() => alerta.className = 'alerta', 3000);
+    }
+
+    cargarRoles();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <title>Mi Perfil - AgroDirecto</title>
+</head>
+<body id="body-perfil">
+
+    <nav id="nav-principal">
+        <a href="index.html"><strong>AGRODIRECTO</strong></a>
+        <div class="links-nav">
+            <span class="texto-rol-nav" id="texto-rol-nav">Panel Comprador</span>
+            <div class="icono-campana tiene-tooltip">
+                <span>🔔</span>
+                <span class="badge-campana" id="badge-notif">0</span>
+                <span class="texto-tooltip">Notificaciones</span>
+            </div>
+            <a href="index.html" id="btn-logout" class="btn-verde btn-salir">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="layout-panel">
+
+        <!-- SIDEBAR: azul marino (pagina-comprador) -->
+        <aside class="sidebar">
+            <div class="perfil-sidebar">
+                <div class="avatar-usuario" id="avatar-usuario">🏪</div>
+                <h4 id="nombre-usuario">Comprador</h4>
+                <span><span class="badge-rol" id="badge-rol-sidebar">Comprador</span></span>
+            </div>
+            <nav class="nav-sidebar" id="nav-sidebar">
+                <!-- Los enlaces propios de cada rol se generan por JS en pintarSidebarSegunRol() -->
+                <a href="perfil.html" class="activo">⚙️ Mi Perfil</a>
+                <a href="#" id="btn-soporte">💬 Soporte</a>
+            </nav>
+        </aside>
+
+        <div class="zona-contenido">
+
+            <div class="cabecera-panel">
+                <div>
+                    <h2>Mi Perfil</h2>
+                    <p>Administre su informacion personal y de contacto</p>
+                </div>
+                <a href="panel_comprador.html" id="btn-volver-resumen" class="btn-verde btn-borde">← Volver al Resumen</a>
+            </div>
+
+            <div class="grid-tarjetas margen-top-32 grid-2-columnas">
+
+                <!-- DATOS PERSONALES -->
+                <div class="tarjeta">
+                    <h3>Datos Personales</h3>
+                    <div class="campo-grupo margen-top-16">
+                        <label>Nombre completo / Establecimiento</label>
+                        <input type="text" id="perfil-nombre" class="campo-input">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Correo electronico</label>
+                        <input type="email" id="perfil-email" class="campo-input campo-solo-lectura" readonly title="El correo no se puede modificar">
+                    </div>
+                    <div class="fila-dos-columnas">
+                        <div class="campo-grupo">
+                            <label>Tipo de documento</label>
+                            <select id="perfil-tipo-documento" class="campo-input"></select>
+                        </div>
+                        <div class="campo-grupo">
+                            <label>Numero de documento</label>
+                            <input type="text" id="perfil-numero-documento" class="campo-input" placeholder="Ej: 1010101010">
+                        </div>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Telefono</label>
+                        <input type="tel" id="perfil-telefono" class="campo-input" placeholder="Ej: 3001234567">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Direccion</label>
+                        <input type="text" id="perfil-direccion" class="campo-input" placeholder="Direccion de entrega principal">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Ciudad</label>
+                        <input type="text" id="perfil-ciudad" class="campo-input">
+                    </div>
+                    <div class="fila-botones margen-top-16">
+                        <button class="btn-verde" onclick="guardarPerfil()">Guardar Cambios</button>
+                    </div>
+                    <div id="alerta-perfil" class="alerta"></div>
+                </div>
+
+                <!-- SEGURIDAD -->
+                <div class="tarjeta">
+                    <h3>Seguridad</h3>
+                    <div class="campo-grupo margen-top-16">
+                        <label>Contraseña actual</label>
+                        <input type="password" id="perfil-pass-actual" class="campo-input">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Nueva contraseña</label>
+                        <input type="password" id="perfil-pass-nueva" class="campo-input">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Confirmar nueva contraseña</label>
+                        <input type="password" id="perfil-pass-confirmar" class="campo-input">
+                    </div>
+                    <div class="fila-botones margen-top-16">
+                        <button class="btn-verde btn-borde" onclick="cambiarPassword()">Actualizar Contraseña</button>
+                    </div>
+                    <div id="alerta-password" class="alerta"></div>
+
+                    <h3 class="margen-top-32">Resumen de Cuenta</h3>
+                    <p class="texto-secundario">
+                        Miembro desde: <strong id="perfil-fecha-registro">—</strong><br>
+                        Rol: <span class="badge-rol" id="badge-rol-resumen">Comprador</span>
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <a href="#" id="btn-volver-arriba" title="Volver arriba">▲</a>
+
+    <div id="modal-soporte" class="modal-soporte">
+        <div class="contenido-modal">
+            <span id="cerrar-soporte">&times;</span>
+            <h2>Centro de Soporte</h2>
+            <p>¿En qué podemos ayudarte?</p>
+            <form>
+                <input type="text" placeholder="Tu nombre" required>
+                <input type="email" placeholder="Tu correo" required>
+                <textarea placeholder="Describe tu problema..." rows="5"></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <footer id="pie-pagina">
+        <p><strong>AgroDirecto</strong> — Del campo a su negocio, sin rodeos. 2026</p>
+    </footer>
+
+    <script src="api.js"></script>
+
+    <script>
+        const btnSoporte = document.getElementById("btn-soporte");
+        const modalSoporte = document.getElementById("modal-soporte");
+        const cerrarSoporte = document.getElementById("cerrar-soporte");
+
+        btnSoporte.addEventListener("click", function(e) {
+            e.preventDefault();
+            modalSoporte.style.display = "flex";
+        });
+        cerrarSoporte.addEventListener("click", function() {
+            modalSoporte.style.display = "none";
+        });
+        window.addEventListener("click", function(e) {
+            if (e.target === modalSoporte) modalSoporte.style.display = "none";
+        });
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('btn-volver-arriba')
+                .classList.toggle('visible', window.scrollY > 200);
+        });
+
+        // PASO 1: configuracion visual y de navegacion para cada rol posible.
+        // Si mas adelante se agrega el rol "administrador" u otro, solo hay
+        // que sumar una entrada aqui.
+        const CONFIG_ROLES = {
+            comprador: {
+                claseBody: 'pagina-comprador',
+                avatar: '🏪',
+                claseBadge: 'badge-comprador',
+                nombreRol: 'Comprador',
+                textoNav: 'Panel Comprador',
+                panelPrincipal: 'panel_comprador.html',
+                enlaces: [
+                    { href: 'panel_comprador.html', texto: '📊 Resumen' },
+                    { href: 'explorar_lotes.html', texto: '🔍 Explorar Lotes' },
+                    { href: 'mis_reservas.html',   texto: '📋 Mis Reservas' },
+                    { href: 'entregas.html',       texto: '🚚 Proximas Entregas' },
+                    { href: 'pagos.html',          texto: '💳 Pagos y Facturas' },
+                    { href: 'productores_favoritos.html', texto: '⭐ Productores Favoritos' }
+                ]
+            },
+            productor: {
+                claseBody: 'pagina-productor',
+                avatar: '🌾',
+                claseBadge: 'badge-productor',
+                nombreRol: 'Productor',
+                textoNav: 'Panel Productor',
+                panelPrincipal: 'panel_productor.html',
+                enlaces: [
+                    { href: 'panel_productor.html', texto: '📊 Resumen' },
+                    { href: 'mis_cultivos.html',    texto: '🌱 Mis Cultivos' },
+                    { href: 'trazabilidad.html',    texto: '📍 Trazabilidad' },
+                    { href: 'ventas_pagos.html',    texto: '💰 Ventas y Pagos' },
+                    { href: 'reportes.html',        texto: '📈 Reportes' }
+                ]
+            }
+        };
+
+        // PASO 2: leer el rol guardado al iniciar sesion. Si no existe
+        // (por ejemplo, entrando directo a perfil.html sin login) se usa
+        // comprador como valor por defecto.
+        const rolActual = (sessionStorage.getItem('usuario_rol') || 'comprador').toLowerCase();
+        const idUsuario = parseInt(sessionStorage.getItem('usuario_id')) || 5;
+
+        // PASO 3: aplica los colores (clase del body), el avatar, los badges
+        // y reconstruye los enlaces propios del rol en el sidebar.
+        function pintarSidebarSegunRol() {
+            const config = CONFIG_ROLES[rolActual] || CONFIG_ROLES.comprador;
+
+            document.getElementById('body-perfil').className = config.claseBody;
+            document.getElementById('avatar-usuario').textContent = config.avatar;
+            document.getElementById('texto-rol-nav').textContent = config.textoNav;
+            document.getElementById('btn-volver-resumen').href = config.panelPrincipal;
+
+            const badgeSidebar = document.getElementById('badge-rol-sidebar');
+            badgeSidebar.textContent = config.nombreRol;
+            badgeSidebar.className = 'badge-rol ' + config.claseBadge;
+
+            const badgeResumen = document.getElementById('badge-rol-resumen');
+            badgeResumen.textContent = config.nombreRol;
+            badgeResumen.className = 'badge-rol ' + config.claseBadge;
+
+            // Genera los enlaces propios del rol y los inserta antes de
+            // "Mi Perfil", que siempre queda fijo al final junto a Soporte.
+            const navSidebar = document.getElementById('nav-sidebar');
+            const enlaceFijoPerfil = navSidebar.querySelector('.activo');
+
+            // IMPORTANTE: si esta funcion se llega a ejecutar mas de una vez
+            // (por ejemplo al volver con el boton "atras" del navegador y que
+            // la pagina se restaure desde la cache -bfcache- disparando
+            // "pageshow"), los links insertados la vez anterior deben
+            // borrarse primero. De lo contrario quedan mezclados o
+            // duplicados links de distintos roles en el sidebar.
+            navSidebar.querySelectorAll('a[data-enlace-rol]').forEach(a => a.remove());
+
+            const htmlEnlaces = config.enlaces
+                .map(e => `<a href="${e.href}" data-enlace-rol="${rolActual}">${e.texto}</a>`)
+                .join('');
+            enlaceFijoPerfil.insertAdjacentHTML('beforebegin', htmlEnlaces);
+        }
+
+        // Llena el <select> de tipo de documento con las opciones reales
+        // que existen en la tabla tipos_documento (CC, NIT, CE, PP, etc).
+        async function cargarTiposDocumento(codigoSeleccionado) {
+            const select = document.getElementById('perfil-tipo-documento');
+            try {
+                const tipos = await obtenerTiposDocumento();
+                select.innerHTML = tipos
+                    .map(t => `<option value="${t.codigo}">${t.nombre}</option>`)
+                    .join('');
+            } catch (e) {
+                // Si la API falla, dejamos al menos el valor actual visible
+                select.innerHTML = codigoSeleccionado
+                    ? `<option value="${codigoSeleccionado}">${codigoSeleccionado}</option>`
+                    : '';
+            }
+            if (codigoSeleccionado) select.value = codigoSeleccionado;
+        }
+
+        // fetch real al endpoint de usuario
+        async function cargarPerfil() {
+            const usuarios = await obtenerUsuarios({});
+            const usuario = usuarios.find(u => u.id === idUsuario) || {};
+            const config = CONFIG_ROLES[rolActual] || CONFIG_ROLES.comprador;
+            const nombre = usuario.nombre || sessionStorage.getItem('usuario_nombre') || config.nombreRol;
+
+            document.getElementById('nombre-usuario').textContent = nombre;
+            document.getElementById('perfil-nombre').value    = nombre;
+            document.getElementById('perfil-email').value     = usuario.correo || '';
+            document.getElementById('perfil-telefono').value  = usuario.telefono || '';
+            document.getElementById('perfil-direccion').value = usuario.direccion || '';
+            document.getElementById('perfil-ciudad').value    = usuario.ciudad || '';
+            document.getElementById('perfil-numero-documento').value = usuario.numero_documento || '';
+            document.getElementById('perfil-fecha-registro').textContent = usuario.fecha_registro || '—';
+
+            await cargarTiposDocumento(usuario.tipo_documento);
+        }
+
+        // NOTA: el correo NO se incluye en "cambios" aunque el input esté
+        // marcado como readonly. Esto evita que, aunque alguien manipule
+        // el DOM o el input desde la consola, se termine enviando un
+        // correo distinto al backend.
+        async function guardarPerfil() {
+            const alerta = document.getElementById('alerta-perfil');
+            const nombre = document.getElementById('perfil-nombre').value.trim();
+            const numeroDocumento = document.getElementById('perfil-numero-documento').value.trim();
+
+            if (!nombre) {
+                alerta.textContent = 'El nombre es obligatorio.';
+                alerta.className = 'alerta alerta-error visible';
+                return;
+            }
+            if (!numeroDocumento) {
+                alerta.textContent = 'El numero de documento es obligatorio.';
+                alerta.className = 'alerta alerta-error visible';
+                return;
+            }
+
+            const cambios = {
+                nombre: nombre,
+                tipo_documento: document.getElementById('perfil-tipo-documento').value,
+                numero_documento: numeroDocumento,
+                telefono: document.getElementById('perfil-telefono').value.trim(),
+                direccion: document.getElementById('perfil-direccion').value.trim(),
+                ciudad: document.getElementById('perfil-ciudad').value.trim()
+            };
+
+            await editarUsuarioApi(idUsuario, cambios);
+
+            sessionStorage.setItem('usuario_nombre', nombre);
+
+            alerta.textContent = '¡Perfil actualizado con exito!';
+            alerta.className = 'alerta alerta-ok visible';
+            document.getElementById('nombre-usuario').textContent = nombre;
+        }
+
+        async function cambiarPassword() {
+            const alerta = document.getElementById('alerta-password');
+            const nueva = document.getElementById('perfil-pass-nueva').value;
+            const confirmar = document.getElementById('perfil-pass-confirmar').value;
+
+            if (!nueva || !confirmar) {
+                alerta.textContent = 'Complete todos los campos.';
+                alerta.className = 'alerta alerta-error visible';
+                return;
+            }
+            if (nueva !== confirmar) {
+                alerta.textContent = 'Las contraseñas nuevas no coinciden.';
+                alerta.className = 'alerta alerta-error visible';
+                return;
+            }
+            if (nueva.length < 6) {
+                alerta.textContent = 'La nueva contraseña debe tener al menos 6 caracteres.';
+                alerta.className = 'alerta alerta-error visible';
+                return;
+            }
+
+            await editarUsuarioApi(idUsuario, { clave: nueva });
+
+            document.getElementById('perfil-pass-actual').value = '';
+            document.getElementById('perfil-pass-nueva').value = '';
+            document.getElementById('perfil-pass-confirmar').value = '';
+
+            alerta.textContent = '¡Contraseña actualizada con exito!';
+            alerta.className = 'alerta alerta-ok visible';
+        }
+
+        (async () => {
+            pintarSidebarSegunRol();
+            await cargarPerfil();
+        })();
+
+        // Si el navegador restaura esta pagina desde su cache (bfcache) al
+        // navegar con "atras"/"adelante", "pageshow" se dispara con
+        // event.persisted = true. En ese caso NO se vuelve a ejecutar el
+        // script de arriba, asi que el sidebar podria quedar con datos
+        // viejos (por ejemplo, de otro usuario/rol que estuvo activo antes
+        // en la misma pestaña). Por seguridad, siempre lo repintamos.
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                pintarSidebarSegunRol();
+                cargarPerfil();
+            }
+        });
+    </script>
+
+</body>
+</html>

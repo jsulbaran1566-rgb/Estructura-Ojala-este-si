@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilo.css">
+    <title>Soporte - AgroDirecto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amaranth:ital,wght@0,400;0,700;1,400;1,700&family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body class="pagina-admin">
+
+    <nav id="nav-principal">
+        <a href="index.html"><strong>AGRODIRECTO</strong></a>
+        <div class="links-nav">
+            <a href="index.html" class="btn-verde btn-salir">Cerrar Sesion</a>
+        </div>
+    </nav>
+
+    <div class="layout-panel">
+        <aside class="sidebar">
+            <div class="perfil-sidebar">
+                <div class="avatar-usuario">🛡️</div>
+                <h4 id="nombre-admin">Administrador</h4>
+                <span><span class="badge-rol badge-admin">Admin</span></span>
+            </div>
+            <nav class="nav-sidebar">
+                <a href="panel_admin.html">📊 Resumen</a>
+                <a href="usuarios.html">👥 Usuarios</a>
+                <a href="roles.html">🔐 Roles</a>
+                <a href="proveedores.html">🚚 Proveedores</a>
+                <a href="lotes.html">🌱 Lotes</a>
+                <a href="historial.html">📋 Historial</a>
+                <a href="soporte.html" class="activo">📨 Tickets de Soporte</a>
+            </nav>
+        </aside>
+
+        <div class="zona-contenido">
+            <div class="banner-panel banner-historial">
+                <span>📨 Mensajes de soporte enviados desde los paneles</span>
+            </div>
+
+            <div class="cabecera-panel">
+                <div>
+                    <h2>Centro de Soporte <span class="badge-rol badge-admin">ADMIN</span></h2>
+                    <p>Errores y consultas enviados por usuarios de la plataforma</p>
+                </div>
+            </div>
+
+            <div class="fila-stats">
+                <div class="stat-tarjeta" data-icono="📨">
+                    <div class="stat-numero" id="stat-total">—</div>
+                    <div class="stat-etiqueta">Total de Mensajes</div>
+                </div>
+                <div class="stat-tarjeta stat-naranja" data-icono="🕓">
+                    <div class="stat-numero" id="stat-pendientes">—</div>
+                    <div class="stat-etiqueta">Pendientes</div>
+                </div>
+                <div class="stat-tarjeta stat-azul" data-icono="🔄">
+                    <div class="stat-numero" id="stat-proceso">—</div>
+                    <div class="stat-etiqueta">En Proceso</div>
+                </div>
+                <div class="stat-tarjeta stat-marron" data-icono="✅">
+                    <div class="stat-numero" id="stat-resueltos">—</div>
+                    <div class="stat-etiqueta">Resueltos</div>
+                </div>
+            </div>
+
+            <div class="barra-filtro margen-top-32">
+                <input type="text" id="filtro-soporte" class="campo-input" placeholder="Buscar por nombre, correo o mensaje...">
+                <select id="filtro-estado-soporte" class="campo-input input-angosto">
+                    <option value="">Todos los estados</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="En proceso">En proceso</option>
+                    <option value="Resuelto">Resuelto</option>
+                </select>
+                <button class="btn-verde btn-borde" onclick="filtrarSoporte()">Filtrar</button>
+                <button class="btn-verde btn-borde" onclick="limpiarFiltroSoporte()">Limpiar</button>
+            </div>
+
+            <div id="alerta-soporte-admin" class="alerta"></div>
+
+            <table class="tabla-datos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Mensaje</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-soporte">
+                    <tr><td colspan="7" class="celda-vacia">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a href="#" id="btn-volver-arriba" title="Volver arriba">▲</a>
+
+    <!-- MODAL VER MENSAJE COMPLETO -->
+    <div class="fondo-modal" id="modal-detalle-soporte">
+        <div class="caja-modal">
+            <button class="btn-cerrar-modal" onclick="cerrarDetalleSoporte()">✕</button>
+            <p class="titulo-modal">Mensaje de Soporte</p>
+            <p><strong>Nombre:</strong> <span id="detalle-nombre"></span></p>
+            <p><strong>Correo:</strong> <span id="detalle-correo"></span></p>
+            <p><strong>Fecha:</strong> <span id="detalle-fecha"></span></p>
+            <p><strong>Estado:</strong> <span id="detalle-estado"></span></p>
+            <p style="margin-top:12px;"><strong>Mensaje:</strong></p>
+            <p id="detalle-mensaje" style="white-space:pre-wrap;"></p>
+        </div>
+    </div>
+
+    <footer id="pie-pagina">
+        <p><strong>AgroDirecto</strong> — Del campo a su negocio, sin rodeos. 2026</p>
+    </footer>
+
+    <script src="api.js"></script>
+
+<script>
+    document.getElementById('nombre-admin').textContent =
+        sessionStorage.getItem('usuario_nombre') || 'Administrador';
+
+    window.addEventListener('scroll', () => {
+        document.getElementById('btn-volver-arriba')
+            .classList.toggle('visible', window.scrollY > 200);
+    });
+
+    let todosTickets = [];
+
+    function escaparHtml(texto) {
+        const div = document.createElement('div');
+        div.textContent = texto || '';
+        return div.innerHTML;
+    }
+
+    function truncar(texto, largo = 60) {
+        if (!texto) return '';
+        return texto.length > largo ? texto.slice(0, largo) + '…' : texto;
+    }
+
+    function claseEstado(estado) {
+        if (estado === 'Resuelto') return 'badge-comprador';
+        if (estado === 'En proceso') return 'badge-productor';
+        return 'badge-admin';
+    }
+
+    function renderTablaSoporte(lista) {
+        const tb = document.getElementById('tabla-soporte');
+        if (!lista.length) {
+            tb.innerHTML = '<tr><td colspan="7" class="celda-vacia">No hay mensajes de soporte</td></tr>';
+            return;
+        }
+        tb.innerHTML = lista.map(t => `
+            <tr>
+                <td>${t.id}</td>
+                <td>${t.fecha_creacion ? new Date(t.fecha_creacion).toLocaleString('es-CO') : ''}</td>
+                <td>${escaparHtml(t.nombre)}</td>
+                <td>${escaparHtml(t.correo)}</td>
+                <td>${escaparHtml(truncar(t.mensaje))}</td>
+                <td>
+                    <select class="campo-input" style="padding:4px 8px;" onchange="cambiarEstadoTicket(${t.id}, this.value)">
+                        <option value="Pendiente" ${t.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+                        <option value="En proceso" ${t.estado === 'En proceso' ? 'selected' : ''}>En proceso</option>
+                        <option value="Resuelto" ${t.estado === 'Resuelto' ? 'selected' : ''}>Resuelto</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="btn-tabla btn-editar" onclick="verDetalleSoporte(${t.id})">Ver</button>
+                    <button class="btn-tabla btn-eliminar" onclick="borrarTicketSoporte(${t.id})">Eliminar</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function actualizarStatsSoporte(lista) {
+        document.getElementById('stat-total').textContent = lista.length;
+        document.getElementById('stat-pendientes').textContent = lista.filter(t => t.estado === 'Pendiente').length;
+        document.getElementById('stat-proceso').textContent = lista.filter(t => t.estado === 'En proceso').length;
+        document.getElementById('stat-resueltos').textContent = lista.filter(t => t.estado === 'Resuelto').length;
+    }
+
+    async function cargarTicketsSoporte() {
+        try {
+            todosTickets = await obtenerTicketsSoporte();
+            actualizarStatsSoporte(todosTickets);
+            renderTablaSoporte(todosTickets);
+        } catch (error) {
+            document.getElementById('tabla-soporte').innerHTML =
+                `<tr><td colspan="7" class="celda-vacia" style="color:#c00;">${error.message}</td></tr>`;
+        }
+    }
+
+    function filtrarSoporte() {
+        const q = document.getElementById('filtro-soporte').value.toLowerCase();
+        const estado = document.getElementById('filtro-estado-soporte').value;
+        let filtrado = todosTickets;
+        if (q) {
+            filtrado = filtrado.filter(t =>
+                (t.nombre && t.nombre.toLowerCase().includes(q)) ||
+                (t.correo && t.correo.toLowerCase().includes(q)) ||
+                (t.mensaje && t.mensaje.toLowerCase().includes(q))
+            );
+        }
+        if (estado) {
+            filtrado = filtrado.filter(t => t.estado === estado);
+        }
+        renderTablaSoporte(filtrado);
+    }
+
+    function limpiarFiltroSoporte() {
+        document.getElementById('filtro-soporte').value = '';
+        document.getElementById('filtro-estado-soporte').value = '';
+        renderTablaSoporte(todosTickets);
+    }
+
+    async function cambiarEstadoTicket(id, estado) {
+        const alerta = document.getElementById('alerta-soporte-admin');
+        try {
+            await actualizarEstadoSoporte(id, estado);
+            const ticket = todosTickets.find(t => t.id === id);
+            if (ticket) ticket.estado = estado;
+            actualizarStatsSoporte(todosTickets);
+            alerta.textContent = 'Estado actualizado correctamente.';
+            alerta.className = 'alerta alerta-ok visible';
+            setTimeout(() => { alerta.className = 'alerta'; }, 2000);
+        } catch (error) {
+            alerta.textContent = error.message;
+            alerta.className = 'alerta alerta-error visible';
+        }
+    }
+
+    async function borrarTicketSoporte(id) {
+        if (!confirm('¿Eliminar este ticket de soporte?')) return;
+        const alerta = document.getElementById('alerta-soporte-admin');
+        try {
+            await eliminarTicketSoporte(id);
+            todosTickets = todosTickets.filter(t => t.id !== id);
+            actualizarStatsSoporte(todosTickets);
+            renderTablaSoporte(todosTickets);
+            alerta.textContent = 'Ticket eliminado.';
+            alerta.className = 'alerta alerta-ok visible';
+            setTimeout(() => { alerta.className = 'alerta'; }, 2000);
+        } catch (error) {
+            alerta.textContent = error.message;
+            alerta.className = 'alerta alerta-error visible';
+        }
+    }
+
+    function verDetalleSoporte(id) {
+        const t = todosTickets.find(x => x.id === id);
+        if (!t) return;
+        document.getElementById('detalle-nombre').textContent = t.nombre || '';
+        document.getElementById('detalle-correo').textContent = t.correo || '';
+        document.getElementById('detalle-fecha').textContent = t.fecha_creacion ? new Date(t.fecha_creacion).toLocaleString('es-CO') : '';
+        document.getElementById('detalle-estado').textContent = t.estado || '';
+        document.getElementById('detalle-mensaje').textContent = t.mensaje || '';
+        document.getElementById('modal-detalle-soporte').classList.add('abierto');
+    }
+
+    function cerrarDetalleSoporte() {
+        document.getElementById('modal-detalle-soporte').classList.remove('abierto');
+    }
+
+    window.addEventListener('click', function(e) {
+        if (e.target === document.getElementById('modal-detalle-soporte')) {
+            cerrarDetalleSoporte();
+        }
+    });
+
+    cargarTicketsSoporte();
+</script>
+
+</body>
+</html>
