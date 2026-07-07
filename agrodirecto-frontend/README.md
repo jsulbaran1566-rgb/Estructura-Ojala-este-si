@@ -4,6 +4,21 @@ Plataforma de comercio agrícola directo entre productores y compradores (restau
 
 ---
 
+## Tecnologías
+
+- **HTML5** — estructura semántica de todas las páginas, sin frameworks ni plantillas.
+- **CSS3** — estilos en `estilo.css`, con variables personalizadas (custom properties), Flexbox para layouts, y diseño responsive.
+- **JavaScript (Vanilla, ES6+)** — sin frameworks (React, Vue, etc.) ni build tools (Webpack, Vite). Uso de `fetch`, `async/await`, módulos de funciones por archivo y manipulación directa del DOM.
+- **Fetch API** — toda la comunicación con el backend pasa por `api.js`, que envuelve `fetch` en funciones específicas por dominio (usuarios, lotes, reservas, etc.).
+- **sessionStorage** — persistencia de la sesión del usuario (token JWT y datos básicos) mientras dura la pestaña del navegador.
+- **JWT (JSON Web Tokens)** — autenticación: el token se recibe en el login y se envía como `Authorization: Bearer` en cada petición protegida.
+- **Google Fonts** — tipografías del sitio.
+- **Live Server (VS Code)** — servidor de desarrollo estático necesario para que el CORS del backend acepte las peticiones (no funciona con `file://`).
+
+> No se usa ningún framework de frontend ni gestor de paquetes (npm/yarn): es un proyecto 100% estático pensado para consumirse directo desde el navegador.
+
+---
+
 ## Archivos principales
 
 **`api.js`** es el conector entre el frontend y el backend (FastAPI). Todas las páginas hablan con la API a través de las funciones de este archivo — ninguna página usa `fetch` directamente. Se importa con `<script src="api.js">` antes del script propio de cada página.
